@@ -11,6 +11,7 @@ import {
   Tooltip,
   Legend,
 } from 'recharts';
+import CustomizedDot from '../customisedDot';
 
 const colors = [
   '#1f77b4',
@@ -160,6 +161,7 @@ const CustomShapeBarChart = ({ candleData }: any) => {
             dataKey='ema2'
             stroke='#e28743'
             activeDot={{ r: 8 }}
+            dot={<CustomizedDot />}
           />
         </ComposedChart>
       </ResponsiveContainer>

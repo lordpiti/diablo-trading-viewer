@@ -12,6 +12,7 @@ import {
 import axiosInstance from 'axios';
 import Chart from '../chart';
 import moment from 'moment';
+import CustomizedDot from '../customisedDot';
 
 interface Props {
   data: any[];
@@ -43,35 +44,37 @@ const CryptoDemo = (props: Props) => {
   const getData = async (symbol: string, klinesInterval: number) => {
     setCurrentSymbol(symbol);
     setCurrentKlinesInterval(klinesInterval);
-    const response = await axiosInstance.get(
-      `${process.env.REACT_APP_TRADING_API_URL}/api/trading/klines/${symbol}/interval/${klinesInterval}`
+    const responseEma = await axiosInstance.get(
+      `${process.env.REACT_APP_TRADING_API_URL}/api/trading/klines/${symbol}/interval/${klinesInterval}/strategy/0?includeOrders=true`
+    );
+    const responseMacd = await axiosInstance.get(
+      `${process.env.REACT_APP_TRADING_API_URL}/api/trading/klines/${symbol}/interval/${klinesInterval}/strategy/1?includeOrders=true`
     );
 
-    const candles = response.data.candles.map((x: any, index: number) => ({
-      high: x.high,
-      low: x.low,
-      open: x.open,
-      close: x.close,
-      ts: moment(new Date(x.date)).format('D/M/yyyy hh:mm'),
-      ema: response.data.emaList[index].ema,
-      ema2: response.data.emaList2[index].ema,
-    }));
+    const candles = responseEma.data.tradingData.candles.map(
+      (x: any, index: number) => {
+        return {
+          high: x.high,
+          low: x.low,
+          open: x.open,
+          close: x.close,
+          ts: moment(new Date(x.date)).format('D/M/yyyy hh:mm'),
+          ema: responseEma.data.strategyResults.ema10[index].ema,
+          ema2: responseEma.data.strategyResults.ema55[index].ema,
+          order: responseEma.data.orders.find(
+            (y: any) => y.timeStamp === x.date
+          ),
+        };
+      }
+    );
 
-    const emaList = response.data.emaList.map((x: any) => ({
-      high: x.high,
-      low: x.low,
-      open: x.open,
-      close: x.close,
-      ts: moment(new Date(x.date)).format('D/M/yyyy hh:mm'),
-    }));
-
-    const macdData = response.data.macd.map((x: any) => ({
+    const macdData = responseMacd.data.strategyResults.macd.map((x: any) => ({
       ...x,
       date: moment(new Date(x.date)).format('D/M/yyyy hh:mm'),
+      order: responseMacd.data.orders.find((y: any) => y.timeStamp === x.date),
     }));
 
     const fulobj = {
-      items: emaList,
       candles: candles,
       macd: macdData,
     };
@@ -167,7 +170,7 @@ const CryptoDemo = (props: Props) => {
               dataKey='signal'
               stroke='#e28743'
               activeDot={{ r: 8 }}
-              //dot={false}
+              dot={<CustomizedDot />}
             />
           </LineChart>
         </ResponsiveContainer>
@@ -175,7 +178,6 @@ const CryptoDemo = (props: Props) => {
           currentSymbol={currentSymbol}
           currentKlinesInterval={currentKlinesInterval}
           candleData={estao.candles}
-          updateDataCallback={setCurrentSymbol}
           symbols={symbols}
         />
       </div>
