@@ -6,7 +6,7 @@ import {
   LineChart,
   ResponsiveContainer,
   Tooltip,
-  XAxis,
+  XAxis, //
   YAxis,
 } from 'recharts';
 import axiosInstance from 'axios';
