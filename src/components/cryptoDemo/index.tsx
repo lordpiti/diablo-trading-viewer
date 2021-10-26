@@ -13,10 +13,22 @@ import axiosInstance from 'axios';
 import Chart from '../chart';
 import moment from 'moment';
 import CustomizedDot from '../customisedDot';
-import { Paper } from '@material-ui/core';
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+} from '@material-ui/core';
+import {
+  withStyles,
+  Theme,
+  createStyles,
+  WithStyles,
+} from '@material-ui/core/styles';
 import './crypto-demo.scss';
 
-interface Props {
+interface Props extends WithStyles<typeof styles> {
   data: any[];
 }
 
@@ -36,6 +48,25 @@ const intervals = [
   { name: '3 days', value: 12 },
   { name: '1 week', value: 13 },
 ];
+
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      display: 'flex',
+      flexWrap: 'wrap',
+    },
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 120,
+    },
+    selectEmpty: {
+      marginTop: theme.spacing(2),
+    },
+    boxSelectRound: {
+      marginBottom: 20,
+      padding: 10,
+    },
+  });
 
 const CryptoDemo = (props: Props) => {
   const [estao, setEstao] = useState(null as any);
@@ -99,6 +130,8 @@ const CryptoDemo = (props: Props) => {
     })();
   }, []);
 
+  const { classes } = props;
+
   if (estao) {
     const minValueMacd = Math.min(...estao.macd.map((x: any) => x.macd));
     const maxValueMacd = Math.max(...estao.macd.map((x: any) => x.macd));
@@ -111,20 +144,48 @@ const CryptoDemo = (props: Props) => {
         <div className='left-sidebar-container'>
           <Paper>
             <div className='sidebar-content'>
-              <span>QuoteAsset</span>
-              <select
-                name='symbol'
-                value={currentSymbol}
-                onChange={(event: any) => {
-                  setCurrentSymbol(event.target.value);
-                }}
-              >
-                {symbols.map((item: string) => (
-                  <option value={item}>{item}</option>
-                ))}
-              </select>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor='currentSymbol'>Select symbol</InputLabel>
+                <Select
+                  value={currentSymbol}
+                  onChange={(event: any) => {
+                    setCurrentSymbol(event.target.value);
+                  }}
+                  inputProps={{
+                    name: 'item',
+                    id: 'item',
+                  }}
+                >
+                  {symbols.map((symbol: any, index: number) => (
+                    <MenuItem key={index} value={symbol}>
+                      {symbol}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor='currentKlinesInterval'>
+                  Select interval
+                </InputLabel>
+                <Select
+                  value={currentKlinesInterval}
+                  onChange={(event: any) => {
+                    setCurrentKlinesInterval(event.target.value);
+                  }}
+                  inputProps={{
+                    name: 'item',
+                    id: 'item',
+                  }}
+                >
+                  {intervals.map((interval: any, index: number) => (
+                    <MenuItem key={index} value={interval.value}>
+                      {interval.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
 
-              <div>
+              {/* <div>
                 <span>Interval</span>
                 <select
                   name='interval'
@@ -137,7 +198,7 @@ const CryptoDemo = (props: Props) => {
                     <option value={item.value}>{item.name}</option>
                   ))}
                 </select>
-              </div>
+              </div> */}
             </div>
           </Paper>
         </div>
@@ -196,4 +257,4 @@ const CryptoDemo = (props: Props) => {
   return <div></div>;
 };
 
-export default CryptoDemo;
+export default withStyles(styles)(CryptoDemo);
