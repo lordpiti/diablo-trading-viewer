@@ -27,6 +27,7 @@ import {
   WithStyles,
 } from '@material-ui/core/styles';
 import './crypto-demo.scss';
+import Macd from '../macd';
 
 interface Props extends WithStyles<typeof styles> {
   data: any[];
@@ -133,12 +134,6 @@ const CryptoDemo = (props: Props) => {
   const { classes } = props;
 
   if (estao) {
-    const minValueMacd = Math.min(...estao.macd.map((x: any) => x.macd));
-    const maxValueMacd = Math.max(...estao.macd.map((x: any) => x.macd));
-
-    const minValueSignal = Math.min(...estao.macd.map((x: any) => x.signal));
-    const maxValueSignal = Math.max(...estao.macd.map((x: any) => x.signal));
-
     return (
       <div className='crypto-demo'>
         <div className='left-sidebar-container'>
@@ -184,72 +179,12 @@ const CryptoDemo = (props: Props) => {
                   ))}
                 </Select>
               </FormControl>
-
-              {/* <div>
-                <span>Interval</span>
-                <select
-                  name='interval'
-                  value={currentKlinesInterval}
-                  onChange={(event: any) => {
-                    setCurrentKlinesInterval(event.target.value);
-                  }}
-                >
-                  {intervals.map((item) => (
-                    <option value={item.value}>{item.name}</option>
-                  ))}
-                </select>
-              </div> */}
             </div>
           </Paper>
         </div>
         <div className='main-diablo-content'>
-          <h1>MacD Indicator</h1>
-          <ResponsiveContainer width='100%' height='50%'>
-            <LineChart
-              width={500}
-              height={300}
-              data={estao.macd}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray='3 3' />
-              <XAxis dataKey='date' />
-              <YAxis
-                domain={[
-                  Math.floor(Math.min(minValueMacd, minValueSignal)),
-                  Math.ceil(Math.max(maxValueMacd, maxValueSignal)),
-                ]}
-              />
-              <Tooltip />
-              <Legend />
-              <Line
-                name='MACD'
-                type='monotone'
-                dataKey='macd'
-                stroke='#8884d8'
-                activeDot={{ r: 8 }}
-                //dot={false}
-              />
-              <Line
-                name='Signal'
-                type='monotone'
-                dataKey='signal'
-                stroke='#e28743'
-                activeDot={{ r: 8 }}
-                dot={<CustomizedDot />}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-          <Chart
-            currentSymbol={currentSymbol}
-            currentKlinesInterval={currentKlinesInterval}
-            candleData={estao.candles}
-            symbols={symbols}
-          />
+          <Macd data={estao.macd} />
+          <Chart candleData={estao.candles} />
         </div>
       </div>
     );
