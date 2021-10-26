@@ -13,6 +13,8 @@ import axiosInstance from 'axios';
 import Chart from '../chart';
 import moment from 'moment';
 import CustomizedDot from '../customisedDot';
+import { Paper } from '@material-ui/core';
+import './crypto-demo.scss';
 
 interface Props {
   data: any[];
@@ -105,81 +107,89 @@ const CryptoDemo = (props: Props) => {
     const maxValueSignal = Math.max(...estao.macd.map((x: any) => x.signal));
 
     return (
-      <div style={{ height: '900px' }}>
-        <div>
-          <span>QuoteAsset</span>
-          <select
-            name='symbol'
-            value={currentSymbol}
-            onChange={(event: any) => {
-              setCurrentSymbol(event.target.value);
-            }}
-          >
-            {symbols.map((item: string) => (
-              <option value={item}>{item}</option>
-            ))}
-          </select>
+      <div className='crypto-demo'>
+        <div className='left-sidebar-container'>
+          <Paper>
+            <div className='sidebar-content'>
+              <span>QuoteAsset</span>
+              <select
+                name='symbol'
+                value={currentSymbol}
+                onChange={(event: any) => {
+                  setCurrentSymbol(event.target.value);
+                }}
+              >
+                {symbols.map((item: string) => (
+                  <option value={item}>{item}</option>
+                ))}
+              </select>
+
+              <div>
+                <span>Interval</span>
+                <select
+                  name='interval'
+                  value={currentKlinesInterval}
+                  onChange={(event: any) => {
+                    setCurrentKlinesInterval(event.target.value);
+                  }}
+                >
+                  {intervals.map((item) => (
+                    <option value={item.value}>{item.name}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </Paper>
         </div>
-        <div>
-          <span>Interval</span>
-          <select
-            name='interval'
-            value={currentKlinesInterval}
-            onChange={(event: any) => {
-              setCurrentKlinesInterval(event.target.value);
-            }}
-          >
-            {intervals.map((item) => (
-              <option value={item.value}>{item.name}</option>
-            ))}
-          </select>
+        <div className='main-diablo-content'>
+          <h1>MacD Indicator</h1>
+          <ResponsiveContainer width='100%' height='50%'>
+            <LineChart
+              width={500}
+              height={300}
+              data={estao.macd}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray='3 3' />
+              <XAxis dataKey='date' />
+              <YAxis
+                domain={[
+                  Math.floor(Math.min(minValueMacd, minValueSignal)),
+                  Math.ceil(Math.max(maxValueMacd, maxValueSignal)),
+                ]}
+              />
+              <Tooltip />
+              <Legend />
+              <Line
+                name='MACD'
+                type='monotone'
+                dataKey='macd'
+                stroke='#8884d8'
+                activeDot={{ r: 8 }}
+                //dot={false}
+              />
+              <Line
+                name='Signal'
+                type='monotone'
+                dataKey='signal'
+                stroke='#e28743'
+                activeDot={{ r: 8 }}
+                dot={<CustomizedDot />}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+          <Chart
+            currentSymbol={currentSymbol}
+            currentKlinesInterval={currentKlinesInterval}
+            candleData={estao.candles}
+            symbols={symbols}
+          />
         </div>
-        <ResponsiveContainer width='100%' height='50%'>
-          <LineChart
-            width={500}
-            height={300}
-            data={estao.macd}
-            margin={{
-              top: 5,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
-          >
-            <CartesianGrid strokeDasharray='3 3' />
-            <XAxis dataKey='date' />
-            <YAxis
-              domain={[
-                Math.floor(Math.min(minValueMacd, minValueSignal)),
-                Math.ceil(Math.max(maxValueMacd, maxValueSignal)),
-              ]}
-            />
-            <Tooltip />
-            <Legend />
-            <Line
-              name='MACD'
-              type='monotone'
-              dataKey='macd'
-              stroke='#8884d8'
-              activeDot={{ r: 8 }}
-              //dot={false}
-            />
-            <Line
-              name='Signal'
-              type='monotone'
-              dataKey='signal'
-              stroke='#e28743'
-              activeDot={{ r: 8 }}
-              dot={<CustomizedDot />}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-        <Chart
-          currentSymbol={currentSymbol}
-          currentKlinesInterval={currentKlinesInterval}
-          candleData={estao.candles}
-          symbols={symbols}
-        />
       </div>
     );
   }

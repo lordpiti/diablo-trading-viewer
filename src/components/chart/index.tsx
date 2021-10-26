@@ -122,7 +122,8 @@ const CustomShapeBarChart = ({ candleData }: any) => {
   );
 
   return (
-    <div style={{ height: '900px' }}>
+    <>
+      <h1>Ema Indicator</h1>
       <ResponsiveContainer width='100%' height='50%'>
         <ComposedChart
           // width={600}
@@ -165,7 +166,7 @@ const CustomShapeBarChart = ({ candleData }: any) => {
           />
         </ComposedChart>
       </ResponsiveContainer>
-    </div>
+    </>
   );
 };
 
