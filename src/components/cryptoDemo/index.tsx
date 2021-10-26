@@ -1,18 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import {
-  CartesianGrid,
-  Legend,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis, //
-  YAxis,
-} from 'recharts';
 import axiosInstance from 'axios';
 import Chart from '../chart';
 import moment from 'moment';
-import CustomizedDot from '../customisedDot';
 import {
   FormControl,
   InputLabel,
