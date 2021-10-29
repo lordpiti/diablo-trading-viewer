@@ -7,7 +7,7 @@ const CustomizedDot = (props: any) => {
           cx='15'
           cy='15'
           r='7.5'
-          fill={payload.order.isBuy ? 'green' : 'red'}
+          fill={payload.order.isBuy ? 'red' : 'green'}
         />
       </svg>
     );
