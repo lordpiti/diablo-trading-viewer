@@ -2,13 +2,7 @@ const CustomizedPopover = (props: any) => {
   const { payload }: any = props;
 
   const createOrderPopoverContent = (item: any) => (
-    <div
-      style={{
-        border: '#bbb 3px solid',
-        padding: '3px 7.5px',
-        backgroundColor: 'white',
-      }}
-    >
+    <>
       <p style={{ fontWeight: 'bold' }}>{`${
         item.order.isBuy ? 'PURCHASE' : 'SALE'
       } ORDER`}</p>
@@ -17,17 +11,11 @@ const CustomizedPopover = (props: any) => {
       <p>Crypto quantity: {item.order.quantityCrypto}</p>
       <p>USDT quantity: {item.order.quantityMoney}</p>
       <p>USDT after order: {item.order.moneyAfterOrder}</p>
-    </div>
+    </>
   );
 
   const createStandardPopoverContent = (payload: any) => (
-    <div
-      style={{
-        border: '#bbb 1.5px solid',
-        padding: '3px 7.5px',
-        backgroundColor: 'white',
-      }}
-    >
+    <>
       <p>{payload[0].payload.date}</p>
       {payload.map((x: any) => (
         <p
@@ -40,14 +28,24 @@ const CustomizedPopover = (props: any) => {
           {x.name} : {x.value}
         </p>
       ))}
-    </div>
+    </>
   );
 
   if (payload && payload.length) {
-    if (payload[0].payload && payload[0].payload.order) {
-      return createOrderPopoverContent(payload[0].payload);
-    }
-    return createStandardPopoverContent(payload);
+    const isOrder = payload[0].payload && payload[0].payload.order;
+    return (
+      <div
+        style={{
+          border: `#bbb ${isOrder ? 3 : 1.5}px solid`,
+          padding: '3px 7.5px',
+          backgroundColor: 'white',
+        }}
+      >
+        {isOrder
+          ? createOrderPopoverContent(payload[0].payload)
+          : createStandardPopoverContent(payload)}
+      </div>
+    );
   }
   return <></>;
 };
