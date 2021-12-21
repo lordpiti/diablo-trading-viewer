@@ -1,5 +1,6 @@
 import React from 'react';
 import CustomizedDot from '../customisedDot/index';
+import CustomisedPopover from '../customisedPopover/index';
 import {
   XAxis,
   YAxis,
@@ -49,7 +50,7 @@ const Macd = (props: any) => {
                 Math.ceil(Math.max(maxValueMacd, maxValueSignal)),
               ]}
             />
-            <Tooltip />
+            <Tooltip content={<CustomisedPopover />} />
             <Legend />
             <Line
               name='MACD'
