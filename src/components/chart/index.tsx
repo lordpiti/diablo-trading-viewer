@@ -123,49 +123,52 @@ const CustomShapeBarChart = ({ candleData }: any) => {
 
   return (
     <>
-      <h1>Ema Indicator</h1>
-      <ResponsiveContainer width='100%' height='50%'>
-        <ComposedChart
-          // width={600}
-          height={300}
-          data={data}
-          // barCategoryGap={0}
-          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-        >
-          <XAxis dataKey='ts' />
-          <YAxis domain={[minValue, maxValue]} />
-          <CartesianGrid strokeDasharray='3 3' />
-          <Bar
-            name='Klines'
-            dataKey='openClose'
-            fill='#8884d8'
-            shape={<Candlestick />}
-            // label={{ position: 'top' }}
+      <span className='chartTitle'>Ema Indicator</span>
+      <div style={{ height: '500px', paddingRight: '20px' }}>
+        <ResponsiveContainer width='100%' height='100%'>
+          <ComposedChart
+            // width={600}
+            height={300}
+            data={data}
+            // barCategoryGap={0}
+            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
           >
-            {data.map((entry: any, index: number) => (
-              <Cell key={`cell-${index}`} fill={colors[index % 20]} />
-            ))}
-          </Bar>
-          <Tooltip />
-          <Legend />
-          <Line
-            name='Exponential Moving Average 55'
-            type='monotone'
-            dataKey='ema'
-            stroke='#8884d8'
-            activeDot={{ r: 8 }}
-          />
+            <XAxis dataKey='ts' />
+            <YAxis domain={[minValue, maxValue]} />
+            <CartesianGrid strokeDasharray='3 3' />
+            <Bar
+              name='Klines'
+              dataKey='openClose'
+              fill='#8884d8'
+              shape={<Candlestick />}
+              // label={{ position: 'top' }}
+            >
+              {data.map((entry: any, index: number) => (
+                <Cell key={`cell-${index}`} fill={colors[index % 20]} />
+              ))}
+            </Bar>
+            <Tooltip />
+            <Legend />
+            <Line
+              name='Exponential Moving Average 55'
+              type='monotone'
+              dataKey='ema'
+              stroke='#8884d8'
+              activeDot={{ r: 8 }}
+              dot={false}
+            />
 
-          <Line
-            name='Exponential Moving Average 10'
-            type='monotone'
-            dataKey='ema2'
-            stroke='#e28743'
-            activeDot={{ r: 8 }}
-            dot={<CustomizedDot />}
-          />
-        </ComposedChart>
-      </ResponsiveContainer>
+            <Line
+              name='Exponential Moving Average 10'
+              type='monotone'
+              dataKey='ema2'
+              stroke='#e28743'
+              activeDot={{ r: 8 }}
+              dot={<CustomizedDot />}
+            />
+          </ComposedChart>
+        </ResponsiveContainer>
+      </div>
     </>
   );
 };

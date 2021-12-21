@@ -3,7 +3,9 @@ import axiosInstance from 'axios';
 import Chart from '../chart';
 import moment from 'moment';
 import {
+  Container,
   FormControl,
+  Grid,
   InputLabel,
   MenuItem,
   Paper,
@@ -39,6 +41,8 @@ const intervals = [
   { name: '1 week', value: 13 },
 ];
 
+const symbols = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT'];
+
 const styles = (theme: Theme) =>
   createStyles({
     root: {
@@ -62,7 +66,7 @@ const CryptoDemo = (props: Props) => {
   const [estao, setEstao] = useState(null as any);
   const [currentSymbol, setCurrentSymbol] = useState('BTCUSDT');
   const [currentKlinesInterval, setCurrentKlinesInterval] = useState(5);
-  const [symbols, setSymbols] = useState([] as string[]);
+  // const [symbols, setSymbols] = useState([] as string[]);
 
   const getData = async (symbol: string, klinesInterval: number) => {
     setCurrentSymbol(symbol);
@@ -109,72 +113,76 @@ const CryptoDemo = (props: Props) => {
     getData(currentSymbol, currentKlinesInterval);
   }, [currentSymbol, currentKlinesInterval]);
 
-  useEffect(() => {
-    (async () => {
-      const responseSymbols = await axiosInstance.get(
-        `${process.env.REACT_APP_TRADING_API_URL}/api/trading/symbols/USDT`
-      );
+  // useEffect(() => {
+  //   (async () => {
+  //     const responseSymbols = await axiosInstance.get(
+  //       `${process.env.REACT_APP_TRADING_API_URL}/api/trading/symbols/USDT`
+  //     );
 
-      const loadedSymbols = responseSymbols.data.symbols;
-      setSymbols(loadedSymbols);
-    })();
-  }, []);
+  //     const loadedSymbols = responseSymbols.data.symbols;
+  //     setSymbols(loadedSymbols);
+  //   })();
+  // }, []);
 
   const { classes } = props;
 
   if (estao) {
     return (
-      <div className='crypto-demo'>
-        <div className='left-sidebar-container'>
-          <Paper>
-            <div className='sidebar-content'>
-              <FormControl className={classes.formControl}>
-                <InputLabel htmlFor='currentSymbol'>Select symbol</InputLabel>
-                <Select
-                  value={currentSymbol}
-                  onChange={(event: any) => {
-                    setCurrentSymbol(event.target.value);
-                  }}
-                  inputProps={{
-                    name: 'item',
-                    id: 'item',
-                  }}
-                >
-                  {symbols.map((symbol: any, index: number) => (
-                    <MenuItem key={index} value={symbol}>
-                      {symbol}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormControl className={classes.formControl}>
-                <InputLabel htmlFor='currentKlinesInterval'>
-                  Select interval
-                </InputLabel>
-                <Select
-                  value={currentKlinesInterval}
-                  onChange={(event: any) => {
-                    setCurrentKlinesInterval(event.target.value);
-                  }}
-                  inputProps={{
-                    name: 'item',
-                    id: 'item',
-                  }}
-                >
-                  {intervals.map((interval: any, index: number) => (
-                    <MenuItem key={index} value={interval.value}>
-                      {interval.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
-          </Paper>
-        </div>
-        <div className='main-diablo-content'>
-          <Macd data={estao.macd} />
-          <Chart candleData={estao.candles} />
-        </div>
+      <div style={{ paddingTop: '20px' }}>
+        <Container maxWidth={false}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={3}>
+              <Paper>
+                <FormControl className={classes.formControl}>
+                  <InputLabel htmlFor='currentSymbol'>Select symbol</InputLabel>
+                  <Select
+                    value={currentSymbol}
+                    onChange={(event: any) => {
+                      setCurrentSymbol(event.target.value);
+                    }}
+                    inputProps={{
+                      name: 'item',
+                      id: 'item',
+                    }}
+                  >
+                    {symbols.map((symbol: any, index: number) => (
+                      <MenuItem key={index} value={symbol}>
+                        {symbol}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormControl className={classes.formControl}>
+                  <InputLabel htmlFor='currentKlinesInterval'>
+                    Select interval
+                  </InputLabel>
+                  <Select
+                    value={currentKlinesInterval}
+                    onChange={(event: any) => {
+                      setCurrentKlinesInterval(event.target.value);
+                    }}
+                    inputProps={{
+                      name: 'item',
+                      id: 'item',
+                    }}
+                  >
+                    {intervals.map((interval: any, index: number) => (
+                      <MenuItem key={index} value={interval.value}>
+                        {interval.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} md={9}>
+              <Paper>
+                <Macd data={estao.macd} />
+                <Chart candleData={estao.candles} />
+              </Paper>
+            </Grid>
+          </Grid>
+        </Container>
       </div>
     );
   }
