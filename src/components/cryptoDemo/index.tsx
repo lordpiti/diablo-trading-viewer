@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from 'axios';
 import Chart from '../chart';
-import moment from 'moment';
 import {
   Container,
   FormControl,
@@ -23,6 +22,8 @@ import {
 } from '@material-ui/core/styles';
 import './crypto-demo.scss';
 import Macd from '../macd';
+import SimpleAccordion from '../orders-accordion';
+import { formatDate } from '../../utils/formatters';
 
 interface Props extends WithStyles<typeof styles> {
   data: any[];
@@ -90,7 +91,7 @@ const CryptoDemo = (props: Props) => {
           low: x.low,
           open: x.open,
           close: x.close,
-          ts: moment(new Date(x.date)).format('D/M/yyyy hh:mm'),
+          ts: formatDate(x.date),
           ema: responseEma.data.strategyResults.ema10[index].ema,
           ema2: responseEma.data.strategyResults.ema55[index].ema,
           order: responseEma.data.orders.find(
@@ -102,7 +103,7 @@ const CryptoDemo = (props: Props) => {
 
     const macdData = responseMacd.data.strategyResults.macd.map((x: any) => ({
       ...x,
-      date: moment(new Date(x.date)).format('D/M/yyyy hh:mm'),
+      date: formatDate(x.date),
       order: responseMacd.data.orders.find((y: any) => y.timeStamp === x.date),
     }));
 
@@ -131,6 +132,12 @@ const CryptoDemo = (props: Props) => {
 
   const onChangeStrategy = (event: React.ChangeEvent<HTMLInputElement>) => {
     setStrategy(event.target.value);
+  };
+
+  const getCurrentOrders = () => {
+    const hh = strategy === '0' ? estao.candles : estao.macd;
+    const orders = hh.filter((x: any) => x.order).map((x: any) => x.order);
+    return orders;
   };
 
   const { classes } = props;
@@ -203,6 +210,8 @@ const CryptoDemo = (props: Props) => {
                   </RadioGroup>
                 </FormControl>
               </Paper>
+              <br></br>
+              <SimpleAccordion orders={getCurrentOrders()} />
             </Grid>
             <Grid item xs={12} md={9}>
               <Paper>
