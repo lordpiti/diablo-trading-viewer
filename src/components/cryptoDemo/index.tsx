@@ -65,6 +65,11 @@ const styles = (theme: Theme) =>
       marginBottom: 20,
       padding: 10,
     },
+    heading: {
+      fontSize: theme.typography.pxToRem(23),
+      fontWeight: theme.typography.fontWeightBold,
+      padding: '10px',
+    },
   });
 
 const CryptoDemo = (props: Props) => {
@@ -149,6 +154,7 @@ const CryptoDemo = (props: Props) => {
           <Grid container spacing={2}>
             <Grid item xs={12} md={3}>
               <Paper>
+                <div className={classes.heading}>Settings</div>
                 <FormControl className={classes.formControl}>
                   <InputLabel htmlFor='currentSymbol'>Select symbol</InputLabel>
                   <Select
@@ -189,7 +195,7 @@ const CryptoDemo = (props: Props) => {
                     ))}
                   </Select>
                 </FormControl>
-                <FormControl component='fieldset'>
+                <FormControl component='fieldset' style={{ marginTop: '20px' }}>
                   <FormLabel component='legend'>Strategy</FormLabel>
                   <RadioGroup
                     aria-label='strategy'
