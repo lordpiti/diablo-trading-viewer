@@ -49,7 +49,7 @@ const createOrderPopoverContent = (order: any) => (
 );
 
 const CustomizedAccordions = (props: any) => {
-  const [expanded, setExpanded] = React.useState<string | false>('panel1');
+  const [expanded, setExpanded] = React.useState<string | false>(false);
   const { orders } = props;
   const classes = useStyles();
   const handleChange =
