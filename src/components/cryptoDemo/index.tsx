@@ -5,10 +5,14 @@ import moment from 'moment';
 import {
   Container,
   FormControl,
+  FormControlLabel,
+  FormLabel,
   Grid,
   InputLabel,
   MenuItem,
   Paper,
+  Radio,
+  RadioGroup,
   Select,
 } from '@material-ui/core';
 import {
@@ -64,6 +68,7 @@ const styles = (theme: Theme) =>
 
 const CryptoDemo = (props: Props) => {
   const [estao, setEstao] = useState(null as any);
+  const [strategy, setStrategy] = useState('1');
   const [currentSymbol, setCurrentSymbol] = useState('BTCUSDT');
   const [currentKlinesInterval, setCurrentKlinesInterval] = useState(5);
   // const [symbols, setSymbols] = useState([] as string[]);
@@ -124,6 +129,10 @@ const CryptoDemo = (props: Props) => {
   //   })();
   // }, []);
 
+  const onChangeStrategy = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setStrategy(event.target.value);
+  };
+
   const { classes } = props;
 
   if (estao) {
@@ -173,12 +182,32 @@ const CryptoDemo = (props: Props) => {
                     ))}
                   </Select>
                 </FormControl>
+                <FormControl component='fieldset'>
+                  <FormLabel component='legend'>Strategy</FormLabel>
+                  <RadioGroup
+                    aria-label='strategy'
+                    name='strategys'
+                    value={strategy}
+                    onChange={onChangeStrategy}
+                  >
+                    <FormControlLabel
+                      value='0'
+                      control={<Radio />}
+                      label='Exponential Medium Average'
+                    />
+                    <FormControlLabel
+                      value='1'
+                      control={<Radio />}
+                      label='MACD'
+                    />
+                  </RadioGroup>
+                </FormControl>
               </Paper>
             </Grid>
             <Grid item xs={12} md={9}>
               <Paper>
-                <Macd data={estao.macd} />
-                <Chart candleData={estao.candles} />
+                {strategy === '0' && <Chart candleData={estao.candles} />}
+                {strategy === '1' && <Macd data={estao.macd} />}
               </Paper>
             </Grid>
           </Grid>
