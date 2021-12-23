@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axiosInstance from 'axios';
 import Chart from '../chart';
 import {
   Container,
@@ -24,6 +23,7 @@ import './crypto-demo.scss';
 import Macd from '../macd';
 import SimpleAccordion from '../orders-accordion';
 import { formatDate } from '../../utils/formatters';
+import { getKlines } from '../../services/binance-service';
 
 interface Props extends WithStyles<typeof styles> {
   data: any[];
@@ -46,7 +46,11 @@ const intervals = [
   { name: '1 week', value: 13 },
 ];
 
+const EMA_STRATEGY = 0;
+const MACD_STRATEGY = 1;
+
 const symbols = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT'];
+const DEFAULT_SYMBOL = symbols[0];
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -73,37 +77,26 @@ const styles = (theme: Theme) =>
   });
 
 const CryptoDemo = (props: Props) => {
-  const [estao, setEstao] = useState(null as any);
-  const [strategy, setStrategy] = useState('1');
-  const [currentSymbol, setCurrentSymbol] = useState('BTCUSDT');
+  const [allData, setAllData] = useState(null as any);
+  const [strategy, setStrategy] = useState(MACD_STRATEGY);
+  const [currentSymbol, setCurrentSymbol] = useState(DEFAULT_SYMBOL);
   const [currentKlinesInterval, setCurrentKlinesInterval] = useState(5);
   // const [symbols, setSymbols] = useState([] as string[]);
 
   const getData = async (symbol: string, klinesInterval: number) => {
     setCurrentSymbol(symbol);
     setCurrentKlinesInterval(klinesInterval);
-    const responseEma = await axiosInstance.get(
-      `${process.env.REACT_APP_TRADING_API_URL}/api/trading/klines/${symbol}/interval/${klinesInterval}/strategy/0?includeOrders=true`
-    );
-    const responseMacd = await axiosInstance.get(
-      `${process.env.REACT_APP_TRADING_API_URL}/api/trading/klines/${symbol}/interval/${klinesInterval}/strategy/1?includeOrders=true`
-    );
+    const responseEma = await getKlines(symbol, klinesInterval, EMA_STRATEGY);
+    const responseMacd = await getKlines(symbol, klinesInterval, MACD_STRATEGY);
 
     const candles = responseEma.data.tradingData.candles.map(
-      (x: any, index: number) => {
-        return {
-          high: x.high,
-          low: x.low,
-          open: x.open,
-          close: x.close,
-          ts: formatDate(x.date),
-          ema: responseEma.data.strategyResults.ema10[index].ema,
-          ema2: responseEma.data.strategyResults.ema55[index].ema,
-          order: responseEma.data.orders.find(
-            (y: any) => y.timeStamp === x.date
-          ),
-        };
-      }
+      (x: any, index: number) => ({
+        ...x,
+        ts: formatDate(x.date),
+        ema: responseEma.data.strategyResults.ema10[index].ema,
+        ema2: responseEma.data.strategyResults.ema55[index].ema,
+        order: responseEma.data.orders.find((y: any) => y.timeStamp === x.date),
+      })
     );
 
     const macdData = responseMacd.data.strategyResults.macd.map((x: any) => ({
@@ -117,7 +110,7 @@ const CryptoDemo = (props: Props) => {
       macd: macdData,
     };
 
-    setEstao(fulobj);
+    setAllData(fulobj);
   };
 
   useEffect(() => {
@@ -136,18 +129,21 @@ const CryptoDemo = (props: Props) => {
   // }, []);
 
   const onChangeStrategy = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setStrategy(event.target.value);
+    setStrategy(parseInt(event.target.value));
   };
 
   const getCurrentOrders = () => {
-    const hh = strategy === '0' ? estao.candles : estao.macd;
-    const orders = hh.filter((x: any) => x.order).map((x: any) => x.order);
+    const strategyData =
+      strategy === EMA_STRATEGY ? allData.candles : allData.macd;
+    const orders = strategyData
+      .filter((x: any) => x.order)
+      .map((x: any) => x.order);
     return orders;
   };
 
   const { classes } = props;
 
-  if (estao) {
+  if (allData) {
     return (
       <div style={{ paddingTop: '20px' }}>
         <Container maxWidth={false}>
@@ -204,12 +200,12 @@ const CryptoDemo = (props: Props) => {
                     onChange={onChangeStrategy}
                   >
                     <FormControlLabel
-                      value='0'
+                      value={EMA_STRATEGY}
                       control={<Radio />}
                       label='Exponential Medium Average'
                     />
                     <FormControlLabel
-                      value='1'
+                      value={MACD_STRATEGY}
                       control={<Radio />}
                       label='MACD'
                     />
@@ -221,8 +217,10 @@ const CryptoDemo = (props: Props) => {
             </Grid>
             <Grid item xs={12} md={9}>
               <Paper>
-                {strategy === '0' && <Chart candleData={estao.candles} />}
-                {strategy === '1' && <Macd data={estao.macd} />}
+                {strategy === EMA_STRATEGY && (
+                  <Chart candleData={allData.candles} />
+                )}
+                {strategy === MACD_STRATEGY && <Macd data={allData.macd} />}
               </Paper>
             </Grid>
           </Grid>
