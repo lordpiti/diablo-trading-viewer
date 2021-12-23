@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Chart from '../chart';
+import Chart from '../ema-chart';
 import {
   Backdrop,
   CircularProgress,
@@ -22,7 +22,7 @@ import {
   WithStyles,
 } from '@material-ui/core/styles';
 import './crypto-demo.scss';
-import Macd from '../macd';
+import Macd from '../macd-chart';
 import SimpleAccordion from '../orders-accordion';
 import { formatDate } from '../../utils/formatters';
 import { getKlines } from '../../services/binance-service';
@@ -83,7 +83,7 @@ const styles = (theme: Theme) =>
     },
   });
 
-const CryptoDemo = (props: Props) => {
+const CryptoDashboard = (props: Props) => {
   const [allData, setAllData] = useState(null as any);
   const [strategy, setStrategy] = useState(MACD_STRATEGY);
   const [currentSymbol, setCurrentSymbol] = useState(DEFAULT_SYMBOL);
@@ -247,4 +247,4 @@ const CryptoDemo = (props: Props) => {
   );
 };
 
-export default withStyles(styles)(CryptoDemo);
+export default withStyles(styles)(CryptoDashboard);

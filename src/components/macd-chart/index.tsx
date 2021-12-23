@@ -1,6 +1,5 @@
-import React from 'react';
-import CustomizedDot from '../customisedDot/index';
-import CustomisedPopover from '../customisedPopover/index';
+import CustomizedDot from '../customisedDot';
+import CustomisedPopover from '../customisedPopover';
 import {
   XAxis,
   YAxis,
@@ -12,7 +11,7 @@ import {
   Legend,
 } from 'recharts';
 
-const Macd = (props: any) => {
+const MacdChart = (props: any) => {
   const { data } = props;
 
   const minValueMacd = Math.min(...data.map((x: any) => x.macd));
@@ -75,4 +74,4 @@ const Macd = (props: any) => {
   );
 };
 
-export default Macd;
+export default MacdChart;

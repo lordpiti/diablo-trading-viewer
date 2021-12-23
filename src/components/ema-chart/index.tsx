@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Bar,
   XAxis,
@@ -11,7 +10,9 @@ import {
   Tooltip,
   Legend,
 } from 'recharts';
+import CandleStick from '../candle-stick';
 import CustomizedDot from '../customisedDot';
+import CustomisedPopover from '../customisedPopover';
 
 const colors = [
   '#1f77b4',
@@ -26,68 +27,6 @@ const colors = [
   '#17becf',
 ];
 
-const Candlestick = (props: any) => {
-  const {
-    //fill,
-    x,
-    y,
-    width,
-    height,
-    low,
-    high,
-    openClose: [open, close],
-  } = props;
-  const isGrowing = open < close;
-  const color = isGrowing ? 'green' : 'red';
-  const ratio = Math.abs(height / (open - close));
-
-  return (
-    <g stroke={color} fill='none' strokeWidth='2'>
-      <path
-        d={`
-          M ${x},${y}
-          L ${x},${y + height}
-          L ${x + width},${y + height}
-          L ${x + width},${y}
-          L ${x},${y}
-        `}
-      />
-      {/* bottom line */}
-      {isGrowing ? (
-        <path
-          d={`
-            M ${x + width / 2}, ${y + height}
-            v ${(open - low) * ratio}
-          `}
-        />
-      ) : (
-        <path
-          d={`
-            M ${x + width / 2}, ${y}
-            v ${(close - low) * ratio}
-          `}
-        />
-      )}
-      {/* top line */}
-      {isGrowing ? (
-        <path
-          d={`
-            M ${x + width / 2}, ${y}
-            v ${(close - high) * ratio}
-          `}
-        />
-      ) : (
-        <path
-          d={`
-            M ${x + width / 2}, ${y + height}
-            v ${(open - high) * ratio}
-          `}
-        />
-      )}
-    </g>
-  );
-};
-
 const prepareData = (data: any) => {
   return data.map(({ open, close, ...other }: { open: any; close: any }) => {
     return {
@@ -97,7 +36,7 @@ const prepareData = (data: any) => {
   });
 };
 
-const CustomShapeBarChart = ({ candleData }: any) => {
+const EmaChart = ({ candleData }: any) => {
   const data = prepareData(candleData);
 
   const minValue = data.reduce(
@@ -140,14 +79,14 @@ const CustomShapeBarChart = ({ candleData }: any) => {
               name='Klines'
               dataKey='openClose'
               fill='#8884d8'
-              shape={<Candlestick />}
+              shape={<CandleStick />}
               // label={{ position: 'top' }}
             >
               {data.map((entry: any, index: number) => (
                 <Cell key={`cell-${index}`} fill={colors[index % 20]} />
               ))}
             </Bar>
-            <Tooltip />
+            <Tooltip content={<CustomisedPopover />} />
             <Legend />
             <Line
               name='Exponential Moving Average 55'
@@ -173,4 +112,4 @@ const CustomShapeBarChart = ({ candleData }: any) => {
   );
 };
 
-export default CustomShapeBarChart;
+export default EmaChart;

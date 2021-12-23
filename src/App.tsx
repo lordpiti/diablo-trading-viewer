@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import cryptoDemo from './components/cryptoDemo';
+import cryptoDemo from './components/crypto-dashboard';
 import { Route } from 'react-router';
 
 function App() {
