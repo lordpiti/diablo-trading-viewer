@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Chart from '../chart';
 import {
+  Backdrop,
+  CircularProgress,
   Container,
   FormControl,
   FormControlLabel,
@@ -45,6 +47,7 @@ const intervals = [
   { name: '3 days', value: 12 },
   { name: '1 week', value: 13 },
 ];
+const DEFAULT_INTERVAL = intervals[5].value;
 
 const EMA_STRATEGY = 0;
 const MACD_STRATEGY = 1;
@@ -74,18 +77,24 @@ const styles = (theme: Theme) =>
       fontWeight: theme.typography.fontWeightBold,
       padding: '10px',
     },
+    backdrop: {
+      zIndex: theme.zIndex.drawer + 1,
+      color: '#fff',
+    },
   });
 
 const CryptoDemo = (props: Props) => {
   const [allData, setAllData] = useState(null as any);
   const [strategy, setStrategy] = useState(MACD_STRATEGY);
   const [currentSymbol, setCurrentSymbol] = useState(DEFAULT_SYMBOL);
-  const [currentKlinesInterval, setCurrentKlinesInterval] = useState(5);
-  // const [symbols, setSymbols] = useState([] as string[]);
+  const [currentKlinesInterval, setCurrentKlinesInterval] =
+    useState(DEFAULT_INTERVAL);
+  const [open, setOpen] = useState(false);
 
   const getData = async (symbol: string, klinesInterval: number) => {
     setCurrentSymbol(symbol);
     setCurrentKlinesInterval(klinesInterval);
+    setOpen(true);
     const responseEma = await getKlines(symbol, klinesInterval, EMA_STRATEGY);
     const responseMacd = await getKlines(symbol, klinesInterval, MACD_STRATEGY);
 
@@ -111,22 +120,12 @@ const CryptoDemo = (props: Props) => {
     };
 
     setAllData(fulobj);
+    setOpen(false);
   };
 
   useEffect(() => {
     getData(currentSymbol, currentKlinesInterval);
   }, [currentSymbol, currentKlinesInterval]);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const responseSymbols = await axiosInstance.get(
-  //       `${process.env.REACT_APP_TRADING_API_URL}/api/trading/symbols/USDT`
-  //     );
-
-  //     const loadedSymbols = responseSymbols.data.symbols;
-  //     setSymbols(loadedSymbols);
-  //   })();
-  // }, []);
 
   const onChangeStrategy = (event: React.ChangeEvent<HTMLInputElement>) => {
     setStrategy(parseInt(event.target.value));
@@ -141,94 +140,111 @@ const CryptoDemo = (props: Props) => {
     return orders;
   };
 
+  const handleCloseBackdrop = () => {
+    setOpen(false);
+  };
+
   const { classes } = props;
 
-  if (allData) {
-    return (
-      <div style={{ paddingTop: '20px' }}>
-        <Container maxWidth={false}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={3}>
-              <Paper>
-                <div className={classes.heading}>Settings</div>
-                <FormControl className={classes.formControl}>
-                  <InputLabel htmlFor='currentSymbol'>Select symbol</InputLabel>
-                  <Select
-                    value={currentSymbol}
-                    onChange={(event: any) => {
-                      setCurrentSymbol(event.target.value);
-                    }}
-                    inputProps={{
-                      name: 'item',
-                      id: 'item',
-                    }}
+  return (
+    <>
+      {allData && (
+        <div style={{ paddingTop: '20px' }}>
+          <Container maxWidth={false}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={3}>
+                <Paper>
+                  <div className={classes.heading}>Settings</div>
+                  <FormControl className={classes.formControl}>
+                    <InputLabel htmlFor='currentSymbol'>
+                      Select symbol
+                    </InputLabel>
+                    <Select
+                      value={currentSymbol}
+                      onChange={(event: any) => {
+                        setCurrentSymbol(event.target.value);
+                      }}
+                      inputProps={{
+                        name: 'item',
+                        id: 'item',
+                      }}
+                    >
+                      {symbols.map((symbol: any, index: number) => (
+                        <MenuItem key={index} value={symbol}>
+                          {symbol}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <FormControl className={classes.formControl}>
+                    <InputLabel htmlFor='currentKlinesInterval'>
+                      Select interval
+                    </InputLabel>
+                    <Select
+                      value={currentKlinesInterval}
+                      onChange={(event: any) => {
+                        setCurrentKlinesInterval(event.target.value);
+                      }}
+                      inputProps={{
+                        name: 'item',
+                        id: 'item',
+                      }}
+                    >
+                      {intervals.map((interval: any, index: number) => (
+                        <MenuItem key={index} value={interval.value}>
+                          {interval.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <FormControl
+                    component='fieldset'
+                    style={{ marginTop: '20px' }}
                   >
-                    {symbols.map((symbol: any, index: number) => (
-                      <MenuItem key={index} value={symbol}>
-                        {symbol}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                <FormControl className={classes.formControl}>
-                  <InputLabel htmlFor='currentKlinesInterval'>
-                    Select interval
-                  </InputLabel>
-                  <Select
-                    value={currentKlinesInterval}
-                    onChange={(event: any) => {
-                      setCurrentKlinesInterval(event.target.value);
-                    }}
-                    inputProps={{
-                      name: 'item',
-                      id: 'item',
-                    }}
-                  >
-                    {intervals.map((interval: any, index: number) => (
-                      <MenuItem key={index} value={interval.value}>
-                        {interval.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                <FormControl component='fieldset' style={{ marginTop: '20px' }}>
-                  <FormLabel component='legend'>Strategy</FormLabel>
-                  <RadioGroup
-                    aria-label='strategy'
-                    name='strategys'
-                    value={strategy}
-                    onChange={onChangeStrategy}
-                  >
-                    <FormControlLabel
-                      value={EMA_STRATEGY}
-                      control={<Radio />}
-                      label='Exponential Medium Average'
-                    />
-                    <FormControlLabel
-                      value={MACD_STRATEGY}
-                      control={<Radio />}
-                      label='MACD'
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </Paper>
-              <br></br>
-              <SimpleAccordion orders={getCurrentOrders()} />
+                    <FormLabel component='legend'>Strategy</FormLabel>
+                    <RadioGroup
+                      aria-label='strategy'
+                      name='strategys'
+                      value={strategy}
+                      onChange={onChangeStrategy}
+                    >
+                      <FormControlLabel
+                        value={EMA_STRATEGY}
+                        control={<Radio />}
+                        label='Exponential Medium Average'
+                      />
+                      <FormControlLabel
+                        value={MACD_STRATEGY}
+                        control={<Radio />}
+                        label='MACD'
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </Paper>
+                <br></br>
+                <SimpleAccordion orders={getCurrentOrders()} />
+              </Grid>
+              <Grid item xs={12} md={9}>
+                <Paper>
+                  {strategy === EMA_STRATEGY && (
+                    <Chart candleData={allData.candles} />
+                  )}
+                  {strategy === MACD_STRATEGY && <Macd data={allData.macd} />}
+                </Paper>
+              </Grid>
             </Grid>
-            <Grid item xs={12} md={9}>
-              <Paper>
-                {strategy === EMA_STRATEGY && (
-                  <Chart candleData={allData.candles} />
-                )}
-                {strategy === MACD_STRATEGY && <Macd data={allData.macd} />}
-              </Paper>
-            </Grid>
-          </Grid>
-        </Container>
-      </div>
-    );
-  }
-  return <div></div>;
+          </Container>
+        </div>
+      )}
+      <Backdrop
+        className={classes.backdrop}
+        open={open}
+        onClick={handleCloseBackdrop}
+      >
+        <CircularProgress color='inherit' />
+      </Backdrop>
+    </>
+  );
 };
 
 export default withStyles(styles)(CryptoDemo);
