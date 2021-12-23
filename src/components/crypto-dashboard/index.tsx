@@ -21,7 +21,6 @@ import {
   createStyles,
   WithStyles,
 } from '@material-ui/core/styles';
-import './crypto-demo.scss';
 import Macd from '../macd-chart';
 import SimpleAccordion from '../orders-accordion';
 import { formatDate } from '../../utils/formatters';
@@ -101,7 +100,7 @@ const CryptoDashboard = (props: Props) => {
     const candles = responseEma.data.tradingData.candles.map(
       (x: any, index: number) => ({
         ...x,
-        ts: formatDate(x.date),
+        date: formatDate(x.date),
         ema: responseEma.data.strategyResults.ema10[index].ema,
         ema2: responseEma.data.strategyResults.ema55[index].ema,
         order: responseEma.data.orders.find((y: any) => y.timeStamp === x.date),

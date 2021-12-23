@@ -1,5 +1,6 @@
 import CustomizedDot from '../customisedDot';
 import CustomisedPopover from '../customisedPopover';
+import { makeStyles } from '@material-ui/core/styles';
 import {
   XAxis,
   YAxis,
@@ -11,8 +12,16 @@ import {
   Legend,
 } from 'recharts';
 
+const useStyles = makeStyles((theme) => ({
+  chartTitle: {
+    fontSize: 'larger',
+    fontWeight: 'bold',
+  },
+}));
+
 const MacdChart = (props: any) => {
   const { data } = props;
+  const classes = useStyles();
 
   const minValueMacd = Math.min(...data.map((x: any) => x.macd));
   const maxValueMacd = Math.max(...data.map((x: any) => x.macd));
@@ -23,7 +32,7 @@ const MacdChart = (props: any) => {
   return (
     <>
       <span
-        className='chartTitle'
+        className={classes.chartTitle}
         // style={{ writingMode: 'vertical-lr', transform: 'rotate(180deg)' }}
       >
         MacD Indicator
@@ -35,7 +44,7 @@ const MacdChart = (props: any) => {
             height={300}
             data={data}
             margin={{
-              top: 5,
+              top: 20,
               right: 30,
               left: 20,
               bottom: 5,

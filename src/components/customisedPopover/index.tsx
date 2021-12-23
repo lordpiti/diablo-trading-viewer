@@ -17,8 +17,9 @@ const CustomizedPopover = (props: any) => {
   const createStandardPopoverContent = (payload: any) => (
     <>
       <p>{payload[0].payload.date}</p>
-      {payload.map((x: any) => (
+      {payload.map((x: any, index: number) => (
         <p
+          key={`popoverproperty-${index}`}
           style={{
             padding: '3px 7.5px',
             margin: '0 0',

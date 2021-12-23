@@ -13,6 +13,14 @@ import {
 import CandleStick from '../candle-stick';
 import CustomizedDot from '../customisedDot';
 import CustomisedPopover from '../customisedPopover';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+  chartTitle: {
+    fontSize: 'larger',
+    fontWeight: 'bold',
+  },
+}));
 
 const colors = [
   '#1f77b4',
@@ -37,6 +45,7 @@ const prepareData = (data: any) => {
 };
 
 const EmaChart = ({ candleData }: any) => {
+  const classes = useStyles();
   const data = prepareData(candleData);
 
   const minValue = data.reduce(
@@ -62,7 +71,7 @@ const EmaChart = ({ candleData }: any) => {
 
   return (
     <>
-      <span className='chartTitle'>Ema Indicator</span>
+      <span className={classes.chartTitle}>Ema Indicator</span>
       <div style={{ height: '500px', paddingRight: '20px' }}>
         <ResponsiveContainer width='100%' height='100%'>
           <ComposedChart
@@ -72,7 +81,7 @@ const EmaChart = ({ candleData }: any) => {
             // barCategoryGap={0}
             margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
           >
-            <XAxis dataKey='ts' />
+            <XAxis dataKey='date' />
             <YAxis domain={[minValue, maxValue]} />
             <CartesianGrid strokeDasharray='3 3' />
             <Bar

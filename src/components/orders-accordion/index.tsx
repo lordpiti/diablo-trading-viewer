@@ -16,9 +16,6 @@ const useStyles = makeStyles((theme) => ({
     '&:before': {
       display: 'none',
     },
-    '&$expanded': {
-      margin: 'auto',
-    },
     margin: 'auto !important',
   },
   heading: {
@@ -48,7 +45,7 @@ const createOrderPopoverContent = (order: any) => (
   </>
 );
 
-const CustomizedAccordions = (props: any) => {
+const OrdersAccordion = (props: any) => {
   const [expanded, setExpanded] = React.useState<string | false>(false);
   const { orders } = props;
   const classes = useStyles();
@@ -62,6 +59,7 @@ const CustomizedAccordions = (props: any) => {
       <div className={classes.heading}>Orders</div>
       {orders.map((order: any, index: number) => (
         <Accordion
+          key={`accordion-${index}`}
           className={classes.root}
           square
           expanded={expanded === `panel${index}`}
@@ -91,4 +89,4 @@ const CustomizedAccordions = (props: any) => {
   );
 };
 
-export default CustomizedAccordions;
+export default OrdersAccordion;
