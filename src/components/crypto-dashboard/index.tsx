@@ -25,10 +25,38 @@ import Macd from '../macd-chart';
 import SimpleAccordion from '../orders-accordion';
 import { formatDate } from '../../utils/formatters';
 import { getKlines } from '../../services/binance-service';
+import {
+  EmaStrategyResult,
+  MacdStrategyResult,
+  Order,
+} from '../interfaces/types';
 
-interface Props extends WithStyles<typeof styles> {
-  data: any[];
+interface WithOrderData {
+  order?: Order;
+  date: string;
 }
+export interface EmaData extends WithOrderData {
+  ema: number;
+  ema2: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+}
+
+export interface MacData extends WithOrderData {
+  macd: number;
+  signal: number;
+}
+
+interface AllData {
+  candles: EmaData[];
+  macd: MacData[];
+  combined: MacData[];
+}
+
+interface Props extends WithStyles<typeof styles> {}
 
 const intervals = [
   { name: '1 min', value: 0 },
@@ -39,9 +67,6 @@ const intervals = [
   { name: '1 hour', value: 5 },
   { name: '2 hours', value: 6 },
   { name: '4 hours', value: 7 },
-  { name: '6 hours', value: 8 },
-  { name: '8 hours', value: 9 },
-  { name: '12 hours', value: 10 },
   { name: '1 day', value: 11 },
   { name: '3 days', value: 12 },
   { name: '1 week', value: 13 },
@@ -50,6 +75,7 @@ const DEFAULT_INTERVAL = intervals[5].value;
 
 const EMA_STRATEGY = 0;
 const MACD_STRATEGY = 1;
+const COMBINED_STRATEGY = 2;
 
 const symbols = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT'];
 const DEFAULT_SYMBOL = symbols[0];
@@ -83,7 +109,7 @@ const styles = (theme: Theme) =>
   });
 
 const CryptoDashboard = (props: Props) => {
-  const [allData, setAllData] = useState(null as any);
+  const [allData, setAllData] = useState(undefined as AllData | undefined);
   const [strategy, setStrategy] = useState(MACD_STRATEGY);
   const [currentSymbol, setCurrentSymbol] = useState(DEFAULT_SYMBOL);
   const [currentKlinesInterval, setCurrentKlinesInterval] =
@@ -96,27 +122,45 @@ const CryptoDashboard = (props: Props) => {
     setOpen(true);
     const responseEma = await getKlines(symbol, klinesInterval, EMA_STRATEGY);
     const responseMacd = await getKlines(symbol, klinesInterval, MACD_STRATEGY);
+    const responseCombined = await getKlines(
+      symbol,
+      klinesInterval,
+      COMBINED_STRATEGY
+    );
 
-    const candles = responseEma.data.tradingData.candles.map(
-      (x: any, index: number) => ({
+    const emaStrategyResult = responseEma.data
+      .strategyResults as EmaStrategyResult;
+    const emaData = responseEma.data.tradingData.candles.map<EmaData>(
+      (x, index: number) => ({
         ...x,
         date: formatDate(x.date),
-        ema: responseEma.data.strategyResults.ema10[index].ema,
-        ema2: responseEma.data.strategyResults.ema55[index].ema,
-        order: responseEma.data.orders.find((y: any) => y.timeStamp === x.date),
+        ema: emaStrategyResult.ema10[index].ema,
+        ema2: emaStrategyResult.ema55[index].ema,
+        order: responseEma.data.orders.find((y) => y.timeStamp === x.date),
       })
     );
 
-    const macdData = responseMacd.data.strategyResults.macd.map((x: any) => ({
+    const macStrategyResults = responseMacd.data
+      .strategyResults as MacdStrategyResult;
+    const macdData = macStrategyResults.macd.map<MacData>((x) => ({
       ...x,
       date: formatDate(x.date),
-      order: responseMacd.data.orders.find((y: any) => y.timeStamp === x.date),
+      order: responseMacd.data.orders.find((y) => y.timeStamp === x.date),
+    }));
+
+    const combinedStrategyResults = responseCombined.data
+      .strategyResults as MacdStrategyResult;
+    const combinedData = combinedStrategyResults.macd.map<MacData>((x) => ({
+      ...x,
+      date: formatDate(x.date),
+      order: responseCombined.data.orders.find((y) => y.timeStamp === x.date),
     }));
 
     const fulobj = {
-      candles: candles,
+      candles: emaData,
       macd: macdData,
-    };
+      combined: combinedData,
+    } as AllData;
 
     setAllData(fulobj);
     setOpen(false);
@@ -131,12 +175,24 @@ const CryptoDashboard = (props: Props) => {
   };
 
   const getCurrentOrders = () => {
-    const strategyData =
-      strategy === EMA_STRATEGY ? allData.candles : allData.macd;
-    const orders = strategyData
-      .filter((x: any) => x.order)
-      .map((x: any) => x.order);
-    return orders;
+    if (allData) {
+      const getOrdersFromData = (strategyData: WithOrderData[]) => {
+        const orders = strategyData.filter((x) => x.order).map((x) => x.order);
+        return orders;
+      };
+
+      switch (strategy) {
+        case EMA_STRATEGY:
+          return getOrdersFromData(allData.candles);
+        case MACD_STRATEGY:
+          return getOrdersFromData(allData.macd);
+        case COMBINED_STRATEGY:
+          return getOrdersFromData(allData.combined);
+        default:
+          return [];
+      }
+    }
+    return [];
   };
 
   const handleCloseBackdrop = () => {
@@ -160,15 +216,20 @@ const CryptoDashboard = (props: Props) => {
                     </InputLabel>
                     <Select
                       value={currentSymbol}
-                      onChange={(event: any) => {
-                        setCurrentSymbol(event.target.value);
+                      onChange={(
+                        event: React.ChangeEvent<{
+                          name?: string;
+                          value: unknown;
+                        }>
+                      ) => {
+                        setCurrentSymbol(event.target.value as string);
                       }}
                       inputProps={{
                         name: 'item',
                         id: 'item',
                       }}
                     >
-                      {symbols.map((symbol: any, index: number) => (
+                      {symbols.map((symbol, index: number) => (
                         <MenuItem key={index} value={symbol}>
                           {symbol}
                         </MenuItem>
@@ -181,15 +242,20 @@ const CryptoDashboard = (props: Props) => {
                     </InputLabel>
                     <Select
                       value={currentKlinesInterval}
-                      onChange={(event: any) => {
-                        setCurrentKlinesInterval(event.target.value);
+                      onChange={(
+                        event: React.ChangeEvent<{
+                          name?: string;
+                          value: unknown;
+                        }>
+                      ) => {
+                        setCurrentKlinesInterval(event.target.value as number);
                       }}
                       inputProps={{
                         name: 'item',
                         id: 'item',
                       }}
                     >
-                      {intervals.map((interval: any, index: number) => (
+                      {intervals.map((interval, index: number) => (
                         <MenuItem key={index} value={interval.value}>
                           {interval.name}
                         </MenuItem>
@@ -217,6 +283,11 @@ const CryptoDashboard = (props: Props) => {
                         control={<Radio />}
                         label='MACD'
                       />
+                      <FormControlLabel
+                        value={COMBINED_STRATEGY}
+                        control={<Radio />}
+                        label='MACD with EMAs guard'
+                      />
                     </RadioGroup>
                   </FormControl>
                 </Paper>
@@ -229,6 +300,9 @@ const CryptoDashboard = (props: Props) => {
                     <Chart candleData={allData.candles} />
                   )}
                   {strategy === MACD_STRATEGY && <Macd data={allData.macd} />}
+                  {strategy === COMBINED_STRATEGY && (
+                    <Macd data={allData.combined} />
+                  )}
                 </Paper>
               </Grid>
             </Grid>

@@ -1,5 +1,5 @@
 const CustomizedPopover = (props: any) => {
-  const { payload }: any = props;
+  const { payload } = props;
 
   const createOrderPopoverContent = (item: any) => (
     <>

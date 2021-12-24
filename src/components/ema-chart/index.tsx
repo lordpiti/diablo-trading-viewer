@@ -14,8 +14,9 @@ import CandleStick from '../candle-stick';
 import CustomizedDot from '../customisedDot';
 import CustomisedPopover from '../customisedPopover';
 import { makeStyles } from '@material-ui/core/styles';
+import { EmaData } from '../crypto-dashboard';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((_) => ({
   chartTitle: {
     fontSize: 'larger',
     fontWeight: 'bold',
@@ -35,23 +36,27 @@ const colors = [
   '#17becf',
 ];
 
-const prepareData = (data: any) => {
-  return data.map(({ open, close, ...other }: { open: any; close: any }) => {
+const prepareData = (data: EmaData[]) => {
+  return data.map((x) => {
     return {
-      ...other,
-      openClose: [open, close],
+      ...x,
+      openClose: [x.open, x.close],
     };
   });
 };
 
-const EmaChart = ({ candleData }: any) => {
+interface Props {
+  candleData: EmaData[];
+}
+
+const EmaChart = ({ candleData }: Props) => {
   const classes = useStyles();
   const data = prepareData(candleData);
 
   const minValue = data.reduce(
     (
       minValue: any,
-      { low, openClose: [open, close] }: { low: any; openClose: any }
+      { low, openClose: [open, close] }: { low: number; openClose: number[] }
     ) => {
       const currentMin = Math.min(low, open, close);
       return minValue === null || currentMin < minValue ? currentMin : minValue;
@@ -61,7 +66,7 @@ const EmaChart = ({ candleData }: any) => {
   const maxValue = data.reduce(
     (
       maxValue: any,
-      { high, openClose: [open, close] }: { high: any; openClose: any }
+      { high, openClose: [open, close] }: { high: number; openClose: number[] }
     ) => {
       const currentMax = Math.max(high, open, close);
       return currentMax > maxValue ? currentMax : maxValue;
@@ -91,7 +96,7 @@ const EmaChart = ({ candleData }: any) => {
               shape={<CandleStick />}
               // label={{ position: 'top' }}
             >
-              {data.map((entry: any, index: number) => (
+              {data.map((_, index: number) => (
                 <Cell key={`cell-${index}`} fill={colors[index % 20]} />
               ))}
             </Bar>

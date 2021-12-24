@@ -57,34 +57,36 @@ const OrdersAccordion = (props: any) => {
   return (
     <Paper>
       <div className={classes.heading}>Orders</div>
-      {orders.map((order: any, index: number) => (
-        <Accordion
-          key={`accordion-${index}`}
-          className={classes.root}
-          square
-          expanded={expanded === `panel${index}`}
-          onChange={handleChange(`panel${index}`)}
-        >
-          <AccordionSummary
-            className={classes.summary}
-            aria-controls='panel1d-content'
-            id='panel1d-header'
+      {(!orders || !orders.length) && <div>No orders sent</div>}
+      {orders &&
+        orders.map((order: any, index: number) => (
+          <Accordion
+            key={`accordion-${index}`}
+            className={classes.root}
+            square
+            expanded={expanded === `panel${index}`}
+            onChange={handleChange(`panel${index}`)}
           >
-            <Grid direction='row' justifyContent='space-between' container>
-              <Grid item>{formatDate(order.timeStamp)}</Grid>
-              <Grid item>
-                <Chip
-                  label={order.isBuy ? 'BUY' : 'SELL'}
-                  color={order.isBuy ? 'primary' : 'secondary'}
-                />
+            <AccordionSummary
+              className={classes.summary}
+              aria-controls='panel1d-content'
+              id='panel1d-header'
+            >
+              <Grid direction='row' justifyContent='space-between' container>
+                <Grid item>{formatDate(order.timeStamp)}</Grid>
+                <Grid item>
+                  <Chip
+                    label={order.isBuy ? 'BUY' : 'SELL'}
+                    color={order.isBuy ? 'primary' : 'secondary'}
+                  />
+                </Grid>
               </Grid>
-            </Grid>
-          </AccordionSummary>
-          <AccordionDetails className={classes.details}>
-            {createOrderPopoverContent(order)}
-          </AccordionDetails>
-        </Accordion>
-      ))}
+            </AccordionSummary>
+            <AccordionDetails className={classes.details}>
+              {createOrderPopoverContent(order)}
+            </AccordionDetails>
+          </Accordion>
+        ))}
     </Paper>
   );
 };
