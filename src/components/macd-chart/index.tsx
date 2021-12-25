@@ -11,6 +11,7 @@ import {
   Tooltip,
   Legend,
 } from 'recharts';
+import { MacData } from '../crypto-dashboard';
 
 const useStyles = makeStyles((theme) => ({
   chartTitle: {
@@ -19,15 +20,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MacdChart = (props: any) => {
+const MacdChart = (props: { data: MacData[] }) => {
   const { data } = props;
   const classes = useStyles();
 
-  const minValueMacd = Math.min(...data.map((x: any) => x.macd));
-  const maxValueMacd = Math.max(...data.map((x: any) => x.macd));
+  const minValueMacd = Math.min(...data.map((x) => x.macd));
+  const maxValueMacd = Math.max(...data.map((x) => x.macd));
 
-  const minValueSignal = Math.min(...data.map((x: any) => x.signal));
-  const maxValueSignal = Math.max(...data.map((x: any) => x.signal));
+  const minValueSignal = Math.min(...data.map((x) => x.signal));
+  const maxValueSignal = Math.max(...data.map((x) => x.signal));
 
   return (
     <>

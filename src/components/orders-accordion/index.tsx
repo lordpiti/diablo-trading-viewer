@@ -5,6 +5,7 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import { Chip, Grid, Paper } from '@material-ui/core';
 import { formatDate } from '../../utils/formatters';
+import { Order } from '../../interfaces/types';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const createOrderPopoverContent = (order: any) => (
+const createOrderPopoverContent = (order: Order) => (
   <>
     <p>Change: {order.value}</p>
     <p>Crypto quantity: {order.quantityCrypto}</p>
@@ -45,7 +46,7 @@ const createOrderPopoverContent = (order: any) => (
   </>
 );
 
-const OrdersAccordion = (props: any) => {
+const OrdersAccordion = (props: { orders: Order[] }) => {
   const [expanded, setExpanded] = React.useState<string | false>(false);
   const { orders } = props;
   const classes = useStyles();
@@ -59,7 +60,7 @@ const OrdersAccordion = (props: any) => {
       <div className={classes.heading}>Orders</div>
       {(!orders || !orders.length) && <div>No orders sent</div>}
       {orders &&
-        orders.map((order: any, index: number) => (
+        orders.map((order, index: number) => (
           <Accordion
             key={`accordion-${index}`}
             className={classes.root}

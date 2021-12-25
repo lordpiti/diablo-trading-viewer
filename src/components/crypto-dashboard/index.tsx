@@ -22,16 +22,16 @@ import {
   WithStyles,
 } from '@material-ui/core/styles';
 import Macd from '../macd-chart';
-import SimpleAccordion from '../orders-accordion';
+import OrdersAccordion from '../orders-accordion';
 import { formatDate } from '../../utils/formatters';
 import { getKlines } from '../../services/binance-service';
 import {
   EmaStrategyResult,
   MacdStrategyResult,
   Order,
-} from '../interfaces/types';
+} from '../../interfaces/types';
 
-interface WithOrderData {
+export interface WithOrderData {
   order?: Order;
   date: string;
 }
@@ -177,7 +177,9 @@ const CryptoDashboard = (props: Props) => {
   const getCurrentOrders = () => {
     if (allData) {
       const getOrdersFromData = (strategyData: WithOrderData[]) => {
-        const orders = strategyData.filter((x) => x.order).map((x) => x.order);
+        const orders = strategyData
+          .filter((x) => x.order)
+          .map((x) => x.order) as Order[];
         return orders;
       };
 
@@ -292,7 +294,7 @@ const CryptoDashboard = (props: Props) => {
                   </FormControl>
                 </Paper>
                 <br></br>
-                <SimpleAccordion orders={getCurrentOrders()} />
+                <OrdersAccordion orders={getCurrentOrders()} />
               </Grid>
               <Grid item xs={12} md={9}>
                 <Paper>

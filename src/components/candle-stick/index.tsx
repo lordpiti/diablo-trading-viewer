@@ -1,4 +1,14 @@
-const Candlestick = (props: any) => {
+interface Props {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  low: number;
+  high: number;
+  openClose: number[];
+}
+
+const Candlestick = (props: Props) => {
   const {
     //fill,
     x,
