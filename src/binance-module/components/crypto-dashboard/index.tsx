@@ -22,9 +22,9 @@ import {
   WithStyles,
 } from '@material-ui/core/styles';
 import Macd from '../macd-chart';
-import SimpleAccordion from '../orders-accordion';
+import OrdersAccordion from '../orders-accordion';
 import { BinanceDataContainer } from '../../containers/binanceDataContainer';
-import { WithOrderData } from '../../types/types';
+import { Order, WithOrderData } from '../../types/types';
 
 interface Props extends WithStyles<typeof styles> { }
 
@@ -101,7 +101,7 @@ const CryptoDashboard = (props: Props) => {
         const getCurrentOrders = () => {
           if (currentData) {
             const getOrdersFromData = (strategyData: WithOrderData[]) => {
-              const orders = strategyData.filter((x) => x.order).map((x) => x.order);
+              const orders = strategyData.filter(x => x.order).map((x) => x.order!);
               return orders;
             };
 
@@ -209,7 +209,7 @@ const CryptoDashboard = (props: Props) => {
                       </FormControl>
                     </Paper>
                     <br></br>
-                    <SimpleAccordion orders={getCurrentOrders()} />
+                    <OrdersAccordion orders={getCurrentOrders()} />
                   </Grid>
                   <Grid item xs={12} md={9}>
                     <Paper>

@@ -1,23 +1,35 @@
-const CustomizedPopover = (props: any) => {
-  const { payload } = props;
+import { TooltipProps } from 'recharts';
+import {
+  NameType,
+  Payload,
+  ValueType,
+} from 'recharts/types/component/DefaultTooltipContent';
+import { WithOrderData } from '../../types/types';
 
-  const createOrderPopoverContent = (item: any) => (
-    <>
-      <p style={{ fontWeight: 'bold' }}>{`${
-        item.order.isBuy ? 'PURCHASE' : 'SALE'
-      } ORDER`}</p>
-      <p>{item.date}</p>
-      <p>Change: {item.order.value}</p>
-      <p>Crypto quantity: {item.order.quantityCrypto}</p>
-      <p>USDT quantity: {item.order.quantityMoney}</p>
-      <p>USDT after order: {item.order.moneyAfterOrder}</p>
-    </>
-  );
 
-  const createStandardPopoverContent = (payload: any) => (
+const CustomizedPopover = (props: TooltipProps<ValueType, NameType>) => {
+  const { active, payload, label } = props;
+
+  const createOrderPopoverContent = (item: WithOrderData) =>
+    item.order && (
+      <>
+        <p style={{ fontWeight: 'bold' }}>{`${item.order.isBuy ? 'PURCHASE' : 'SALE'
+          } ORDER`}</p>
+        <p>{item.date}</p>
+        <p>Change: {item.order.value}</p>
+        <p>Crypto quantity: {item.order.quantityCrypto}</p>
+        <p>USDT quantity: {item.order.quantityMoney}</p>
+        <p>USDT after order: {item.order.moneyAfterOrder}</p>
+      </>
+    );
+
+
+  const createStandardPopoverContent = (
+    payload: Payload<ValueType, NameType>[]
+  ) => (
     <>
       <p>{payload[0].payload.date}</p>
-      {payload.map((x: any, index: number) => (
+      {payload.map((x, index: number) => (
         <p
           key={`popoverproperty-${index}`}
           style={{
@@ -33,7 +45,7 @@ const CustomizedPopover = (props: any) => {
   );
 
   if (payload && payload.length) {
-    const isOrder = payload[0].payload && payload[0].payload.order;
+    const isOrder = (payload[0].payload && payload[0].payload.order) as boolean;
     return (
       <div
         style={{
@@ -43,7 +55,7 @@ const CustomizedPopover = (props: any) => {
         }}
       >
         {isOrder
-          ? createOrderPopoverContent(payload[0].payload)
+          ? createOrderPopoverContent(payload[0].payload as WithOrderData)
           : createStandardPopoverContent(payload)}
       </div>
     );

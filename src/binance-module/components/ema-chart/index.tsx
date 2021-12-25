@@ -65,7 +65,7 @@ const EmaChart = ({ candleData }: Props) => {
   );
   const maxValue = data.reduce(
     (
-      maxValue: any,
+      maxValue: number,
       { high, openClose: [open, close] }: { high: number; openClose: number[] }
     ) => {
       const currentMax = Math.max(high, open, close);
@@ -93,7 +93,7 @@ const EmaChart = ({ candleData }: Props) => {
               name='Klines'
               dataKey='openClose'
               fill='#8884d8'
-              shape={<CandleStick />}
+              shape={CandleStick}
             // label={{ position: 'top' }}
             >
               {data.map((_, index: number) => (
