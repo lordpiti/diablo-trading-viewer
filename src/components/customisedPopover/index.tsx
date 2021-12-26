@@ -8,7 +8,6 @@ import { WithOrderData } from '../crypto-dashboard';
 
 const CustomizedPopover = (props: TooltipProps<ValueType, NameType>) => {
   const { active, payload, label } = props;
-  debugger;
 
   const createOrderPopoverContent = (item: WithOrderData) =>
     item.order && (

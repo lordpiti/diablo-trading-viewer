@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Chart from '../ema-chart';
 import {
   Backdrop,
+  Box,
   CircularProgress,
   Container,
   FormControl,
@@ -14,17 +15,13 @@ import {
   Radio,
   RadioGroup,
   Select,
-} from '@material-ui/core';
-import {
-  withStyles,
-  Theme,
-  createStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
+  SelectChangeEvent,
+} from '@mui/material';
 import Macd from '../macd-chart';
 import OrdersAccordion from '../orders-accordion';
 import { formatDate } from '../../utils/formatters';
 import { getKlines } from '../../services/binance-service';
+import makeStyles from '@mui/styles/makeStyles';
 import {
   EmaStrategyResult,
   MacdStrategyResult,
@@ -56,8 +53,6 @@ interface AllData {
   combined: MacData[];
 }
 
-interface Props extends WithStyles<typeof styles> {}
-
 const intervals = [
   { name: '1 min', value: 0 },
   { name: '3 min', value: 1 },
@@ -80,41 +75,24 @@ const COMBINED_STRATEGY = 2;
 const symbols = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT'];
 const DEFAULT_SYMBOL = symbols[0];
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      flexWrap: 'wrap',
-    },
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120,
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(2),
-    },
-    boxSelectRound: {
-      marginBottom: 20,
-      padding: 10,
-    },
-    heading: {
-      fontSize: theme.typography.pxToRem(23),
-      fontWeight: theme.typography.fontWeightBold,
-      padding: '10px',
-    },
-    backdrop: {
-      zIndex: theme.zIndex.drawer + 1,
-      color: '#fff',
-    },
-  });
+const useStyles = makeStyles((theme) => ({
+  heading: {
+    fontSize: 23,
+    fontWeight: 'bold',
+    padding: '10px',
+    marginBottom: '10px',
+  },
+  settings: {},
+}));
 
-const CryptoDashboard = (props: Props) => {
+const CryptoDashboard = () => {
   const [allData, setAllData] = useState(undefined as AllData | undefined);
   const [strategy, setStrategy] = useState(MACD_STRATEGY);
   const [currentSymbol, setCurrentSymbol] = useState(DEFAULT_SYMBOL);
   const [currentKlinesInterval, setCurrentKlinesInterval] =
     useState(DEFAULT_INTERVAL);
   const [open, setOpen] = useState(false);
+  const classes = useStyles();
 
   const getData = async (symbol: string, klinesInterval: number) => {
     setCurrentSymbol(symbol);
@@ -201,7 +179,13 @@ const CryptoDashboard = (props: Props) => {
     setOpen(false);
   };
 
-  const { classes } = props;
+  const handleChangeSymbol = (event: SelectChangeEvent) => {
+    setCurrentSymbol(event.target.value as string);
+  };
+
+  const handleChangeInterval = (event: SelectChangeEvent<number>) => {
+    setCurrentKlinesInterval(event.target.value as number);
+  };
 
   return (
     <>
@@ -212,58 +196,63 @@ const CryptoDashboard = (props: Props) => {
               <Grid item xs={12} md={3}>
                 <Paper>
                   <div className={classes.heading}>Settings</div>
-                  <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor='currentSymbol'>
-                      Select symbol
-                    </InputLabel>
-                    <Select
-                      value={currentSymbol}
-                      onChange={(
-                        event: React.ChangeEvent<{
-                          name?: string;
-                          value: unknown;
-                        }>
-                      ) => {
-                        setCurrentSymbol(event.target.value as string);
-                      }}
-                      inputProps={{
-                        name: 'item',
-                        id: 'item',
-                      }}
-                    >
-                      {symbols.map((symbol, index: number) => (
-                        <MenuItem key={index} value={symbol}>
-                          {symbol}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                  <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor='currentKlinesInterval'>
-                      Select interval
-                    </InputLabel>
-                    <Select
-                      value={currentKlinesInterval}
-                      onChange={(
-                        event: React.ChangeEvent<{
-                          name?: string;
-                          value: unknown;
-                        }>
-                      ) => {
-                        setCurrentKlinesInterval(event.target.value as number);
-                      }}
-                      inputProps={{
-                        name: 'item',
-                        id: 'item',
-                      }}
-                    >
-                      {intervals.map((interval, index: number) => (
-                        <MenuItem key={index} value={interval.value}>
-                          {interval.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
+                  <Grid
+                    container
+                    spacing={2}
+                    className={classes.settings}
+                    justifyContent={'space-evenly'}
+                    sx={{ minWidth: 120 }}
+                  >
+                    <Grid item>
+                      <FormControl>
+                        <InputLabel id='symbol-select-label'>
+                          Select symbol
+                        </InputLabel>
+                        <Select
+                          value={currentSymbol}
+                          onChange={handleChangeSymbol}
+                          label='Select symbol'
+                          labelId='symbol-select-label'
+                          inputProps={{
+                            name: 'item',
+                            id: 'item',
+                          }}
+                        >
+                          {symbols.map((symbol, index: number) => (
+                            <MenuItem key={index} value={symbol}>
+                              {symbol}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item>
+                      <FormControl sx={{ minWidth: 120 }}>
+                        <InputLabel
+                          id='interval-select-label'
+                          htmlFor='currentKlinesInterval'
+                        >
+                          Select interval
+                        </InputLabel>
+                        <Select
+                          value={currentKlinesInterval}
+                          label='Select interval'
+                          onChange={handleChangeInterval}
+                          labelId='interval-select-label'
+                          inputProps={{
+                            name: 'item',
+                            id: 'item',
+                          }}
+                        >
+                          {intervals.map((interval, index: number) => (
+                            <MenuItem key={index} value={interval.value}>
+                              {interval.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                  </Grid>
                   <FormControl
                     component='fieldset'
                     style={{ marginTop: '20px' }}
@@ -312,7 +301,7 @@ const CryptoDashboard = (props: Props) => {
         </div>
       )}
       <Backdrop
-        className={classes.backdrop}
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={open}
         onClick={handleCloseBackdrop}
       >
@@ -322,4 +311,4 @@ const CryptoDashboard = (props: Props) => {
   );
 };
 
-export default withStyles(styles)(CryptoDashboard);
+export default CryptoDashboard;
