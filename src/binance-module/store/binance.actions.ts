@@ -1,4 +1,4 @@
-// import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   AllData,
   COMBINED_STRATEGY,
@@ -11,15 +11,16 @@ import {
   EmaStrategyResult,
   MacdStrategyResult,
 } from '../../components/interfaces/types';
-import { AppDispatch, BinanceThunk } from '../../store/store';
+import * as binanceService from '../services/binance-service';
 import { formatDate } from '../../utils/formatters';
 import { fetchKlinesSuccess } from './binance.reducer';
 
-export const fetchKlines = (
-  symbol: string,
-  klinesInterval: number
-): BinanceThunk => {
-  return async (dispatch: AppDispatch, _, { binanceService }) => {
+export const fetchKlines = createAsyncThunk(
+  'binance/fetchData',
+  async (
+    { symbol, klinesInterval }: { symbol: string; klinesInterval: number },
+    thunkAPI
+  ) => {
     const responseEma = await binanceService.getKlines(
       symbol,
       klinesInterval,
@@ -69,15 +70,6 @@ export const fetchKlines = (
       macd: macdData,
       combined: combinedData,
     } as AllData;
-    dispatch(fetchKlinesSuccess(fulobj));
-  };
-};
-
-// First, create the thunk
-// export const fetchBinanceData = createAsyncThunk(
-//     'binance/fetchData',
-//     async (userId: number, thunkAPI) => {
-//       const response = await userAPI.fetchById(userId)
-//       return response.data
-//     }
-//   )
+    thunkAPI.dispatch(fetchKlinesSuccess(fulobj));
+  }
+);

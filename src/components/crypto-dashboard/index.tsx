@@ -127,7 +127,6 @@ const CryptoDashboard = (props: Props) => {
       {({ currentData }: any) => {
         const getCurrentOrders = () => {
           if (currentData) {
-            debugger;
             const getOrdersFromData = (strategyData: WithOrderData[]) => {
               const orders = strategyData.filter((x) => x.order).map((x) => x.order);
               return orders;
