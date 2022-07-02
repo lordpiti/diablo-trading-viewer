@@ -1,7 +1,7 @@
 export interface ResponseTradingOrders {
-    tradingData: TradingData;
-    strategyResults: MacdStrategyResult | EmaStrategyResult;
-    orders: Order[];
+  tradingData: TradingData;
+  strategyResults: MacdStrategyResult | EmaStrategyResult;
+  orders: Order[];
 }
 
 export interface StrategyResult {
@@ -21,7 +21,7 @@ export interface MacdResult extends ResultBase {
   signal: number;
 }
 
-export type EmaMacdResult = MacdResult | EmaResult; 
+export type EmaMacdResult = MacdResult | EmaResult;
 
 export interface MacdStrategyResult extends StrategyResult {
   macd: MacdResult[];
@@ -43,7 +43,7 @@ export interface Order {
 }
 
 export interface TradingData {
-    candles: Quote[];
+  candles: Quote[];
 }
 
 export interface Quote {
@@ -53,4 +53,29 @@ export interface Quote {
   low: number;
   close: number;
   volume: number;
+}
+
+export interface WithOrderData {
+  order?: Order;
+  date: string;
+}
+export interface EmaData extends WithOrderData {
+  ema: number;
+  ema2: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+}
+
+export interface MacData extends WithOrderData {
+  macd: number;
+  signal: number;
+}
+
+export interface AllData {
+  candles: EmaData[];
+  macd: MacData[];
+  combined: MacData[];
 }

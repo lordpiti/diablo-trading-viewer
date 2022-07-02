@@ -14,7 +14,7 @@ import CandleStick from '../candle-stick';
 import CustomizedDot from '../customisedDot';
 import CustomisedPopover from '../customisedPopover';
 import { makeStyles } from '@material-ui/core/styles';
-import { EmaData } from '../crypto-dashboard';
+import { EmaData } from '../../types/types';
 
 const useStyles = makeStyles((_) => ({
   chartTitle: {
@@ -94,7 +94,7 @@ const EmaChart = ({ candleData }: Props) => {
               dataKey='openClose'
               fill='#8884d8'
               shape={<CandleStick />}
-              // label={{ position: 'top' }}
+            // label={{ position: 'top' }}
             >
               {data.map((_, index: number) => (
                 <Cell key={`cell-${index}`} fill={colors[index % 20]} />

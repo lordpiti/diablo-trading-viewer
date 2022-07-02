@@ -23,35 +23,8 @@ import {
 } from '@material-ui/core/styles';
 import Macd from '../macd-chart';
 import SimpleAccordion from '../orders-accordion';
-import {
-  Order,
-} from '../../types/types';
 import { BinanceDataContainer } from '../../containers/binanceDataContainer';
-
-interface WithOrderData {
-  order?: Order;
-  date: string;
-}
-export interface EmaData extends WithOrderData {
-  ema: number;
-  ema2: number;
-  open: number;
-  high: number;
-  low: number;
-  close: number;
-  volume: number;
-}
-
-export interface MacData extends WithOrderData {
-  macd: number;
-  signal: number;
-}
-
-export interface AllData {
-  candles: EmaData[];
-  macd: MacData[];
-  combined: MacData[];
-}
+import { WithOrderData } from '../../types/types';
 
 interface Props extends WithStyles<typeof styles> { }
 

@@ -1,13 +1,16 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
-  AllData,
   COMBINED_STRATEGY,
-  EmaData,
   EMA_STRATEGY,
-  MacData,
   MACD_STRATEGY,
 } from '../components/crypto-dashboard';
-import { EmaStrategyResult, MacdStrategyResult } from '../types/types';
+import {
+  AllData,
+  EmaData,
+  EmaStrategyResult,
+  MacData,
+  MacdStrategyResult,
+} from '../types/types';
 import * as binanceService from '../services/binance-service';
 import { formatDate } from '../../utils/formatters';
 import { fetchKlinesSuccess } from './binance.reducer';
