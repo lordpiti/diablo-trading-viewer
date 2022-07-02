@@ -6,7 +6,7 @@ export const store = configureStore({
   reducer: reducers,
   middleware: (getDefaultMiddleware) => {
     const reduxDefaultMiddleware = getDefaultMiddleware();
-    return [...reduxDefaultMiddleware];
+    return reduxDefaultMiddleware;
   },
 });
 

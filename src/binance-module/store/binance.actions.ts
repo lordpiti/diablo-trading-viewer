@@ -6,11 +6,8 @@ import {
   EMA_STRATEGY,
   MacData,
   MACD_STRATEGY,
-} from '../../components/crypto-dashboard';
-import {
-  EmaStrategyResult,
-  MacdStrategyResult,
-} from '../../components/interfaces/types';
+} from '../components/crypto-dashboard';
+import { EmaStrategyResult, MacdStrategyResult } from '../types/types';
 import * as binanceService from '../services/binance-service';
 import { formatDate } from '../../utils/formatters';
 import { fetchKlinesSuccess } from './binance.reducer';

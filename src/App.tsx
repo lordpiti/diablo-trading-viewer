@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import cryptoDashboard from './components/crypto-dashboard';
+import cryptoDashboard from './binance-module/components/crypto-dashboard';
 import { Route } from 'react-router';
 
 function App() {

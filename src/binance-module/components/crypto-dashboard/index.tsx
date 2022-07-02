@@ -25,8 +25,8 @@ import Macd from '../macd-chart';
 import SimpleAccordion from '../orders-accordion';
 import {
   Order,
-} from '../interfaces/types';
-import { BinanceDataContainer } from '../../binance-module/containers/binanceDataContainer';
+} from '../../types/types';
+import { BinanceDataContainer } from '../../containers/binanceDataContainer';
 
 interface WithOrderData {
   order?: Order;

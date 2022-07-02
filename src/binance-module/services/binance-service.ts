@@ -1,5 +1,5 @@
 import axiosInstance from 'axios';
-import { ResponseTradingOrders } from '../../components/interfaces/types';
+import { ResponseTradingOrders } from '../types/types';
 
 export const getKlines = async (
   symbol: string,

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AllData } from '../../components/crypto-dashboard';
+import { AllData } from '../components/crypto-dashboard';
 
 export type BinanceState = {
   allData?: AllData;

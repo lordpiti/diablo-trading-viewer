@@ -1,21 +1,30 @@
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Chip, Grid, Paper } from '@material-ui/core';
-import { formatDate } from '../../utils/formatters';
+import { formatDate } from '../../../utils/formatters';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    border: '1px solid rgba(0, 0, 0, .125)',
+    boxShadow: 'none',
+    '&:not(:last-child)': {
+      borderBottom: 0,
+    },
+    '&:before': {
+      display: 'none',
+    },
+    margin: 'auto !important',
   },
   heading: {
     fontSize: theme.typography.pxToRem(23),
     // fontWeight: theme.typography.fontWeightBold,
     padding: '10px',
   },
-  content: {
+  details: {
+    padding: theme.spacing(0),
     display: 'inline-block',
     width: '100%',
   },
@@ -24,9 +33,6 @@ const useStyles = makeStyles((theme) => ({
     borderBottom: '1px solid rgba(0, 0, 0, .125)',
     marginBottom: -1,
     minHeight: 56,
-    '&$expanded': {
-      minHeight: 56,
-    },
   },
 }));
 
@@ -40,21 +46,31 @@ const createOrderPopoverContent = (order: any) => (
 );
 
 const OrdersAccordion = (props: any) => {
-  const classes = useStyles();
-
+  const [expanded, setExpanded] = React.useState<string | false>(false);
   const { orders } = props;
+  const classes = useStyles();
+  const handleChange =
+    (panel: string) => (event: React.ChangeEvent<{}>, newExpanded: boolean) => {
+      setExpanded(newExpanded ? panel : false);
+    };
 
   return (
     <Paper>
-      <div className={classes.root}>
-        <div className={classes.heading}>Orders</div>
-        {orders.map((order: any) => (
-          <Accordion>
+      <div className={classes.heading}>Orders</div>
+      {(!orders || !orders.length) && <div>No orders sent</div>}
+      {orders &&
+        orders.map((order: any, index: number) => (
+          <Accordion
+            key={`accordion-${index}`}
+            className={classes.root}
+            square
+            expanded={expanded === `panel${index}`}
+            onChange={handleChange(`panel${index}`)}
+          >
             <AccordionSummary
               className={classes.summary}
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls='panel1a-content'
-              id='panel1a-header'
+              aria-controls='panel1d-content'
+              id='panel1d-header'
             >
               <Grid direction='row' justifyContent='space-between' container>
                 <Grid item>{formatDate(order.timeStamp)}</Grid>
@@ -66,14 +82,11 @@ const OrdersAccordion = (props: any) => {
                 </Grid>
               </Grid>
             </AccordionSummary>
-            <AccordionDetails>
-              <div className={classes.content}>
-                {createOrderPopoverContent(order)}
-              </div>
+            <AccordionDetails className={classes.details}>
+              {createOrderPopoverContent(order)}
             </AccordionDetails>
           </Accordion>
         ))}
-      </div>
     </Paper>
   );
 };
