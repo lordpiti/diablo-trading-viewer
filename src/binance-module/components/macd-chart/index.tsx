@@ -1,6 +1,6 @@
 import CustomizedDot from '../customisedDot';
 import CustomisedPopover from '../customisedPopover';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import {
   XAxis,
   YAxis,
@@ -16,7 +16,7 @@ import { MacData } from '../../types/types';
 
 const useStyles = makeStyles((theme) => ({
   chartTitle: {
-    fontSize: 'larger',
+    fontSize: '24px',
     fontWeight: 'bold',
   },
 }));

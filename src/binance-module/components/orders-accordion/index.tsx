@@ -1,9 +1,10 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import { Chip, Grid, Paper } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import { Chip, Grid, Paper } from '@mui/material';
+
 import { formatDate } from '../../../utils/formatters';
 import { Order } from '../../types/types';
 
@@ -20,20 +21,23 @@ const useStyles = makeStyles((theme) => ({
     margin: 'auto !important',
   },
   heading: {
-    fontSize: theme.typography.pxToRem(23),
-    // fontWeight: theme.typography.fontWeightBold,
+    fontSize: 23,
+    fontWeight: 'bold',
     padding: '10px',
   },
   details: {
-    padding: theme.spacing(0),
+    padding: 0,
     display: 'inline-block',
     width: '100%',
   },
   summary: {
-    backgroundColor: 'rgba(0, 0, 0, .03)',
-    borderBottom: '1px solid rgba(0, 0, 0, .125)',
+    backgroundColor: 'rgba(0, 0, 0, .03) !important',
+    borderBottom: '1px solid rgba(0, 0, 0, .125) !important',
     marginBottom: -1,
     minHeight: 56,
+  },
+  noOrders: {
+    paddingBottom: '20px',
   },
 }));
 
@@ -63,7 +67,7 @@ const OrdersAccordion = (props: { orders: Order[] }) => {
         orders.map((order: any, index: number) => (
           <Accordion
             key={`accordion-${index}`}
-            className={classes.root}
+            classes={{ root: classes.summary }}
             square
             expanded={expanded === `panel${index}`}
             onChange={handleChange(`panel${index}`)}
@@ -78,7 +82,7 @@ const OrdersAccordion = (props: { orders: Order[] }) => {
                 <Grid item>
                   <Chip
                     label={order.isBuy ? 'BUY' : 'SELL'}
-                    color={order.isBuy ? 'primary' : 'secondary'}
+                    color={order.isBuy ? 'warning' : 'success'}
                   />
                 </Grid>
               </Grid>

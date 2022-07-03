@@ -9,7 +9,6 @@ interface Props {
 }
 
 const Candlestick = (props: Props) => {
-
   const {
     //fill,
     x,

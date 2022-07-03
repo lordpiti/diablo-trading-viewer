@@ -9,10 +9,8 @@ export const BinanceDataContainer = (props: any) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!binanceData) {
-      dispatch(fetchKlines({ symbol, klinesInterval }));
-    }
-  }, [binanceData, symbol, klinesInterval, dispatch]);
+    dispatch(fetchKlines({ symbol, klinesInterval }));
+  }, [symbol, klinesInterval, dispatch]);
 
   return (<div>{children({ currentData: binanceData })}</div>);
 };
