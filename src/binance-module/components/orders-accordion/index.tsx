@@ -70,7 +70,7 @@ const OrdersAccordion = (props: { orders: Order[] }) => {
         orders.map((order: any, index: number) => (
           <Accordion
             key={`accordion-${index}`}
-            classes={{ root: classes.summary }}
+            classes={{ root: classes.root }}
             square
             expanded={expanded === `panel${index}`}
             onChange={handleChange(`panel${index}`)}
