@@ -62,7 +62,10 @@ const OrdersAccordion = (props: { orders: Order[] }) => {
   return (
     <Paper>
       <div className={classes.heading}>Orders</div>
-      {(!orders || !orders.length) && <div>No orders sent</div>}
+      {(!orders || !orders.length) && (
+        <div className={classes.noOrders}>No orders sent</div>
+      )}
+
       {orders &&
         orders.map((order: any, index: number) => (
           <Accordion
