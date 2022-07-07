@@ -1,12 +1,24 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { AppDispatch } from '../../store/store';
 import { fetchKlines } from '../store/binance.actions';
 import { getKlines } from '../store/binance.selectors';
+import { AllData } from '../types/types';
 
-export const BinanceDataContainer = (props: any) => {
+interface BinanceDataContainerProps {
+  symbol: string;
+  klinesInterval: number;
+  children: (props: BinanceDataChildProps) => React.ReactNode;
+}
+
+export interface BinanceDataChildProps {
+  currentData?: AllData;
+}
+
+export const BinanceDataContainer = (props: BinanceDataContainerProps) => {
   const { symbol, klinesInterval, children } = props;
   const binanceData = useSelector(getKlines);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     dispatch(fetchKlines({ symbol, klinesInterval }));

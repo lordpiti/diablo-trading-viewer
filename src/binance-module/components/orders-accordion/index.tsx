@@ -67,7 +67,7 @@ const OrdersAccordion = (props: { orders: Order[] }) => {
       )}
 
       {orders &&
-        orders.map((order: any, index: number) => (
+        orders.map((order, index: number) => (
           <Accordion
             key={`accordion-${index}`}
             classes={{ root: classes.root }}

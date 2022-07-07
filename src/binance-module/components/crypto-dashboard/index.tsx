@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Chart from '../ema-chart';
 import {
   Backdrop,
-  Box,
   CircularProgress,
   Container,
   FormControl,
@@ -21,7 +20,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import Macd from '../macd-chart';
 import OrdersAccordion from '../orders-accordion';
 import { BinanceDataContainer } from '../../containers/binanceDataContainer';
-import { Order, WithOrderData } from '../../types/types';
+import { WithOrderData } from '../../types/types';
 
 const intervals = [
   { name: '1 min', value: 0 },
@@ -73,7 +72,7 @@ const CryptoDashboard = () => {
 
   return (
     <BinanceDataContainer symbol={currentSymbol} klinesInterval={currentKlinesInterval}>
-      {({ currentData }: any) => {
+      {({ currentData }) => {
         const getCurrentOrders = () => {
           if (currentData) {
             const getOrdersFromData = (strategyData: WithOrderData[]) => {
