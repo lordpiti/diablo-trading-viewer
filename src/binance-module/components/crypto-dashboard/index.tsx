@@ -23,17 +23,17 @@ import { BinanceDataContainer } from '../../containers/binanceDataContainer';
 import { WithOrderData } from '../../types/types';
 
 const intervals = [
-  { name: '1 min', value: 0 },
-  { name: '3 min', value: 1 },
-  { name: '5 min', value: 2 },
-  { name: '15 min', value: 3 },
-  { name: '30 min', value: 4 },
-  { name: '1 hour', value: 5 },
-  { name: '2 hours', value: 6 },
-  { name: '4 hours', value: 7 },
-  { name: '1 day', value: 11 },
-  { name: '3 days', value: 12 },
-  { name: '1 week', value: 13 },
+  { name: '1 min', value: 60 },
+  { name: '3 min', value: 180 },
+  { name: '5 min', value: 300 },
+  { name: '15 min', value: 900 },
+  { name: '30 min', value: 1800 },
+  { name: '1 hour', value: 3600 },
+  { name: '2 hours', value: 7200 },
+  { name: '4 hours', value: 14400 },
+  { name: '1 day', value: 86400 },
+  { name: '3 days', value: 259200 },
+  { name: '1 week', value: 604800 },
 ];
 export const DEFAULT_INTERVAL = intervals[5].value;
 
