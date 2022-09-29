@@ -1,6 +1,5 @@
 import CustomizedDot from '../customisedDot';
 import CustomisedPopover from '../customisedPopover';
-import makeStyles from '@mui/styles/makeStyles';
 import {
   XAxis,
   YAxis,
@@ -12,18 +11,18 @@ import {
   Legend,
 } from 'recharts';
 import { MacData } from '../../types/types';
+import { Box } from '@mui/material';
 
 
-const useStyles = makeStyles((theme) => ({
+const styles = {
   chartTitle: {
     fontSize: '24px',
     fontWeight: 'bold',
   },
-}));
+};
 
 const MacdChart = (props: { data: MacData[] }) => {
   const { data } = props;
-  const classes = useStyles();
 
   const minValueMacd = Math.min(...data.map(x => x.macd));
   const maxValueMacd = Math.max(...data.map(x => x.macd));
@@ -33,12 +32,12 @@ const MacdChart = (props: { data: MacData[] }) => {
 
   return (
     <>
-      <span
-        className={classes.chartTitle}
+      <Box
+        sx={styles.chartTitle}
       // style={{ writingMode: 'vertical-lr', transform: 'rotate(180deg)' }}
       >
         MacD Indicator
-      </span>
+      </Box>
       <div style={{ height: '500px', paddingRight: '20px' }}>
         <ResponsiveContainer width='100%' height='100%'>
           <LineChart

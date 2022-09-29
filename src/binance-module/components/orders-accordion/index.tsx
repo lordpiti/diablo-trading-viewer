@@ -1,14 +1,13 @@
 import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
-import { Chip, Grid, Paper } from '@mui/material';
+import { Box, Chip, Grid, Paper } from '@mui/material';
 
 import { formatDate } from '../../../utils/formatters';
 import { Order } from '../../types/types';
 
-const useStyles = makeStyles((theme) => ({
+const styles = {
   root: {
     border: '1px solid rgba(0, 0, 0, .125)',
     boxShadow: 'none',
@@ -39,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   noOrders: {
     paddingBottom: '20px',
   },
-}));
+};
 
 const createOrderPopoverContent = (order: Order) => (
   <>
@@ -53,7 +52,6 @@ const createOrderPopoverContent = (order: Order) => (
 const OrdersAccordion = (props: { orders: Order[] }) => {
   const [expanded, setExpanded] = React.useState<string | false>(false);
   const { orders } = props;
-  const classes = useStyles();
   const handleChange =
     (panel: string) => (event: React.ChangeEvent<{}>, newExpanded: boolean) => {
       setExpanded(newExpanded ? panel : false);
@@ -61,22 +59,22 @@ const OrdersAccordion = (props: { orders: Order[] }) => {
 
   return (
     <Paper>
-      <div className={classes.heading}>Orders</div>
+      <Box sx={styles.heading}>Orders</Box>
       {(!orders || !orders.length) && (
-        <div className={classes.noOrders}>No orders sent</div>
+        <Box sx={styles.noOrders}>No orders sent</Box>
       )}
 
       {orders &&
         orders.map((order, index: number) => (
           <Accordion
             key={`accordion-${index}`}
-            classes={{ root: classes.root }}
+            sx={{ root: styles.root }}
             square
             expanded={expanded === `panel${index}`}
             onChange={handleChange(`panel${index}`)}
           >
             <AccordionSummary
-              className={classes.summary}
+              sx={styles.summary}
               aria-controls='panel1d-content'
               id='panel1d-header'
             >
@@ -90,7 +88,7 @@ const OrdersAccordion = (props: { orders: Order[] }) => {
                 </Grid>
               </Grid>
             </AccordionSummary>
-            <AccordionDetails className={classes.details}>
+            <AccordionDetails sx={styles.details}>
               {createOrderPopoverContent(order)}
             </AccordionDetails>
           </Accordion>

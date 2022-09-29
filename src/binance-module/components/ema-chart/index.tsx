@@ -13,15 +13,15 @@ import {
 import CandleStick from '../candle-stick';
 import CustomizedDot from '../customisedDot';
 import CustomisedPopover from '../customisedPopover';
-import makeStyles from '@mui/styles/makeStyles';
 import { EmaData } from '../../types/types';
+import { Box } from '@mui/material';
 
-const useStyles = makeStyles((_) => ({
+const styles = {
   chartTitle: {
     fontSize: '24px',
     fontWeight: 'bold',
   },
-}));
+};
 
 const colors = [
   '#1f77b4',
@@ -50,7 +50,6 @@ interface Props {
 }
 
 const EmaChart = ({ candleData }: Props) => {
-  const classes = useStyles();
   const data = prepareData(candleData);
 
   const minValue = data.reduce(
@@ -76,7 +75,7 @@ const EmaChart = ({ candleData }: Props) => {
 
   return (
     <>
-      <span className={classes.chartTitle}>Ema Indicator</span>
+      <Box sx={styles.chartTitle}>Ema Indicator</Box>
       <div style={{ height: '500px', paddingRight: '20px' }}>
         <ResponsiveContainer width='100%' height='100%'>
           <ComposedChart

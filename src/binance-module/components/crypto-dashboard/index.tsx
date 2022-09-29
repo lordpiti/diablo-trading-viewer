@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Chart from '../ema-chart';
 import {
   Backdrop,
+  Box,
   CircularProgress,
   Container,
   FormControl,
@@ -16,7 +17,6 @@ import {
   Select,
   SelectChangeEvent,
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import Macd from '../macd-chart';
 import OrdersAccordion from '../orders-accordion';
 import { BinanceDataContainer } from '../../containers/binanceDataContainer';
@@ -44,15 +44,17 @@ export const COMBINED_STRATEGY = 2;
 const symbols = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT'];
 export const DEFAULT_SYMBOL = symbols[0];
 
-const useStyles = makeStyles((theme) => ({
+const styles = {
   heading: {
     fontSize: 23,
     fontWeight: 'bold',
     padding: '10px',
     marginBottom: '10px',
   },
-  settings: {},
-}));
+  settings: {
+    minWidth: 120
+  },
+};
 
 const CryptoDashboard = () => {
   const [strategy, setStrategy] = useState(MACD_STRATEGY);
@@ -60,7 +62,6 @@ const CryptoDashboard = () => {
   const [currentKlinesInterval, setCurrentKlinesInterval] =
     useState(DEFAULT_INTERVAL);
   const [open, setOpen] = useState(false);
-  const classes = useStyles();
 
   const onChangeStrategy = (event: React.ChangeEvent<HTMLInputElement>) => {
     setStrategy(parseInt(event.target.value));
@@ -109,13 +110,12 @@ const CryptoDashboard = () => {
                 <Grid container spacing={2}>
                   <Grid item xs={12} md={3}>
                     <Paper>
-                      <div className={classes.heading}>Settings</div>
+                      <Box sx={styles.heading}>Settings</Box>
                       <Grid
                         container
                         spacing={2}
-                        className={classes.settings}
+                        sx={styles.settings}
                         justifyContent={'space-evenly'}
-                        sx={{ minWidth: 120 }}
                       >
                         <Grid item>
                           <FormControl>
