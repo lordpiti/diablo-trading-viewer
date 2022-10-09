@@ -45,7 +45,7 @@ const CustomizedPopover = (props: TooltipProps<ValueType, NameType>) => {
   );
 
   if (payload && payload.length) {
-    const isOrder = (payload[0].payload && payload[0].payload.order) as boolean;
+    const isOrder = (payload[0].payload?.order) as boolean;
     return (
       <div
         style={{

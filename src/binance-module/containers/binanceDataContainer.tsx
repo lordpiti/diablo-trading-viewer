@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/store';
 import { fetchKlines } from '../store/binance.actions';
@@ -8,7 +8,7 @@ import { AllData } from '../types/types';
 interface BinanceDataContainerProps {
   symbol: string;
   klinesInterval: number;
-  children: (props: BinanceDataChildProps) => React.ReactNode;
+  children: (props: BinanceDataChildProps) => ReactNode;
 }
 
 export interface BinanceDataChildProps {

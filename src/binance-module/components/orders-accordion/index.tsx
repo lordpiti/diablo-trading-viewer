@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import { Box, Chip, Grid, Paper } from '@mui/material';
-
 import { formatDate } from '../../../utils/formatters';
 import { Order } from '../../types/types';
 
@@ -50,10 +49,10 @@ const createOrderPopoverContent = (order: Order) => (
 );
 
 const OrdersAccordion = (props: { orders: Order[] }) => {
-  const [expanded, setExpanded] = React.useState<string | false>(false);
+  const [expanded, setExpanded] = useState<string | false>(false);
   const { orders } = props;
   const handleChange =
-    (panel: string) => (event: React.ChangeEvent<{}>, newExpanded: boolean) => {
+    (panel: string) => (event: ChangeEvent<{}>, newExpanded: boolean) => {
       setExpanded(newExpanded ? panel : false);
     };
 
