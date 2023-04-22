@@ -7,6 +7,8 @@ export const getKlines = async (
   strategy: number
 ) => {
   return await axiosInstance.get<ResponseTradingOrders>(
-    `${process.env.REACT_APP_TRADING_API_URL}/api/trading/klines/${symbol}/interval/${klinesInterval}/strategy/${strategy}?includeOrders=true`
+    `${
+      import.meta.env.VITE_TRADING_API_URL
+    }/api/trading/klines/${symbol}/interval/${klinesInterval}/strategy/${strategy}?includeOrders=true`
   );
 };
