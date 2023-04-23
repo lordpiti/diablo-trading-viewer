@@ -14,10 +14,5 @@ export default defineConfig({
   server: {
     open: true,
     port: 3000,
-  },
-  resolve: {
-    alias: {
-      stream: 'stream-browserify',
-    },
-  },
+  }
 });
