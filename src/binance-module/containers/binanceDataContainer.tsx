@@ -24,5 +24,5 @@ export const BinanceDataContainer = (props: BinanceDataContainerProps) => {
     dispatch(fetchKlines({ symbol, klinesInterval }));
   }, [symbol, klinesInterval, dispatch]);
 
-  return (<div>{children({ currentData: binanceData })}</div>);
+  return (children({ currentData: binanceData }));
 };
