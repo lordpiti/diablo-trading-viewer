@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { AppDispatch } from '../../store/store';
+import { useAppDispatch } from '../../store/store';
 import { fetchKlines } from '../store/binance.actions';
 import { getKlines } from '../store/binance.selectors';
 
@@ -9,7 +9,7 @@ export const useBinanceData = (symbol: string, klinesInterval: number) => {
   const [error, setError] = useState<unknown>();
 
   const binanceData = useSelector(getKlines);
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     try {
