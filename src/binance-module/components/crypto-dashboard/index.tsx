@@ -56,7 +56,7 @@ const styles = {
   },
 };
 
-const CryptoDashboard = () => {
+export const CryptoDashboard = () => {
   const [strategy, setStrategy] = useState(MACD_STRATEGY);
   const [currentSymbol, setCurrentSymbol] = useState(DEFAULT_SYMBOL);
   const [currentKlinesInterval, setCurrentKlinesInterval] =
@@ -223,5 +223,3 @@ const CryptoDashboard = () => {
     </Backdrop>
   </>;
 }
-
-export default CryptoDashboard;
