@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../store/store';
 import { fetchKlines } from '../store/binance.actions';
 import { getKlines } from '../store/binance.selectors';
