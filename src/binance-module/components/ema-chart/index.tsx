@@ -92,7 +92,7 @@ const EmaChart = ({ candleData }: Props) => {
               name='Klines'
               dataKey='openClose'
               fill='#8884d8'
-              shape={CandleStick}
+              shape={CandleStick as any}
             // label={{ position: 'top' }}
             >
               {data.map((_, index: number) => (
