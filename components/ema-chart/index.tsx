@@ -9,31 +9,31 @@ import {
   ComposedChart,
   Tooltip,
   Legend,
-} from 'recharts';
-import CandleStick from '../candle-stick';
-import CustomizedDot from '../customisedDot';
-import CustomisedPopover from '../customisedPopover';
-import { EmaData } from '../../types/types';
-import { Box } from '@mui/material';
+} from "recharts";
+import CandleStick from "../candle-stick";
+import CustomizedDot from "../customisedDot";
+import CustomisedPopover from "../customisedPopover";
+import { EmaData } from "../../types/types";
+import { Box } from "@mui/material";
 
 const styles = {
   chartTitle: {
-    fontSize: '24px',
-    fontWeight: 'bold',
+    fontSize: "24px",
+    fontWeight: "bold",
   },
 };
 
 const colors = [
-  '#1f77b4',
-  '#ff7f0e',
-  '#2ca02c',
-  '#d62728',
-  '#9467bd',
-  '#8c564b',
-  '#e377c2',
-  '#7f7f7f',
-  '#bcbd22',
-  '#17becf',
+  "#1f77b4",
+  "#ff7f0e",
+  "#2ca02c",
+  "#d62728",
+  "#9467bd",
+  "#8c564b",
+  "#e377c2",
+  "#7f7f7f",
+  "#bcbd22",
+  "#17becf",
 ];
 
 const prepareData = (data: EmaData[]) => {
@@ -76,8 +76,8 @@ const EmaChart = ({ candleData }: Props) => {
   return (
     <>
       <Box sx={styles.chartTitle}>Ema Indicator</Box>
-      <div style={{ height: '500px', paddingRight: '20px' }}>
-        <ResponsiveContainer width='100%' height='100%'>
+      <div style={{ height: "500px", paddingRight: "20px" }}>
+        <ResponsiveContainer width="100%" height="100%">
           <ComposedChart
             // width={600}
             height={300}
@@ -85,15 +85,15 @@ const EmaChart = ({ candleData }: Props) => {
             // barCategoryGap={0}
             margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
           >
-            <XAxis dataKey='date' />
+            <XAxis dataKey="date" />
             <YAxis domain={[minValue, maxValue]} />
-            <CartesianGrid strokeDasharray='3 3' />
+            <CartesianGrid strokeDasharray="3 3" />
             <Bar
-              name='Klines'
-              dataKey='openClose'
-              fill='#8884d8'
+              name="Klines"
+              dataKey="openClose"
+              fill="#8884d8"
               shape={CandleStick as any}
-            // label={{ position: 'top' }}
+              // label={{ position: 'top' }}
             >
               {data.map((_, index: number) => (
                 <Cell key={`cell-${index}`} fill={colors[index % 20]} />
@@ -102,19 +102,19 @@ const EmaChart = ({ candleData }: Props) => {
             <Tooltip content={<CustomisedPopover />} />
             <Legend />
             <Line
-              name='Exponential Moving Average 55'
-              type='monotone'
-              dataKey='ema'
-              stroke='#8884d8'
+              name="Exponential Moving Average 55"
+              type="monotone"
+              dataKey="ema"
+              stroke="#8884d8"
               activeDot={{ r: 8 }}
               dot={false}
             />
 
             <Line
-              name='Exponential Moving Average 10'
-              type='monotone'
-              dataKey='ema2'
-              stroke='#e28743'
+              name="Exponential Moving Average 10"
+              type="monotone"
+              dataKey="ema2"
+              stroke="#e28743"
               activeDot={{ r: 8 }}
               dot={<CustomizedDot />}
             />

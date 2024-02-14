@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./*"]
     },
     "target": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -18,7 +18,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "preserve",
-    "typeRoots": ["./types", "node_modules/@types"],
+    "typeRoots": ["@/types", "node_modules/@types"],
     "noFallthroughCasesInSwitch": true,
     "plugins": [
       {
@@ -28,7 +28,7 @@
     "incremental": true
   },
   "include": [
-    "./src",
+    "./",
     "./dist/types/**/*.ts",
     "./next-env.d.ts",
     ".next/types/**/*.ts"

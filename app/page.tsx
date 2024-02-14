@@ -1,4 +1,4 @@
-import { CryptoDashboard } from "@/binance-module/components/crypto-dashboard";
+import { CryptoDashboard } from "@/components/crypto-dashboard";
 import "@/global.css";
 
 export default function Page() {

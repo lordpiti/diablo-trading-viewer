@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import * as binanceService from "@/binance-module/services/binance-service";
+import * as binanceService from "@/services/binance-service";
 import { formatDate } from "@/utils/formatters";
 import {
   EMA_STRATEGY,

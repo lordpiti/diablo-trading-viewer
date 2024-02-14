@@ -1,6 +1,7 @@
 .root {
   text-align: center;
   background-color: lightgrey;
+  height: calc(100vh - 7vh);
 }
 
 .header {
