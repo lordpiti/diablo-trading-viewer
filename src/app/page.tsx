@@ -1,6 +1,6 @@
-import '../index.css'
-import { ClientOnly } from './client'
+import { CryptoDashboard } from "@/binance-module/components/crypto-dashboard";
+import "@/global.css";
 
 export default function Page() {
-    return <ClientOnly />
+  return <CryptoDashboard />;
 }
