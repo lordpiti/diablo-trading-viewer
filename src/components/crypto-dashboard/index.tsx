@@ -1,5 +1,15 @@
-import React, { useState } from "react";
-import Chart from "../ema-chart";
+import {
+  COMBINED_STRATEGY_KEY,
+  DEFAULT_INTERVAL,
+  DEFAULT_STRATEGY,
+  DEFAULT_SYMBOL,
+  EMA_STRATEGY_KEY,
+  MACD_STRATEGY_KEY,
+  intervals,
+  strategyLabelDictionary,
+  strategyList,
+  symbols,
+} from "@/constants/constants";
 import {
   Backdrop,
   Box,
@@ -17,32 +27,12 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import Macd from "../macd-chart";
-import OrdersAccordion from "../orders-accordion";
-import { WithOrderData } from "../../types/types";
+import React, { useState } from "react";
 import { useBinanceData } from "../../hooks/useBinanceData";
-
-const intervals = [
-  { name: "1 min", value: 60 },
-  { name: "3 min", value: 180 },
-  { name: "5 min", value: 300 },
-  { name: "15 min", value: 900 },
-  { name: "30 min", value: 1800 },
-  { name: "1 hour", value: 3600 },
-  { name: "2 hours", value: 7200 },
-  { name: "4 hours", value: 14400 },
-  { name: "1 day", value: 86400 },
-  { name: "3 days", value: 259200 },
-  { name: "1 week", value: 604800 },
-];
-export const DEFAULT_INTERVAL = intervals[5].value;
-
-export const EMA_STRATEGY = 0;
-export const MACD_STRATEGY = 1;
-export const COMBINED_STRATEGY = 2;
-
-const symbols = ["BTCUSDT", "ETHUSDT", "BNBUSDT"];
-export const DEFAULT_SYMBOL = symbols[0];
+import { EmaData, MacData } from "../../types/types";
+import EmaChart from "../ema-chart";
+import MacdChart from "../macd-chart";
+import OrdersAccordion from "../orders-accordion";
 
 const styles = {
   heading: {
@@ -57,53 +47,38 @@ const styles = {
 };
 
 export const CryptoDashboard = () => {
-  const [strategy, setStrategy] = useState(MACD_STRATEGY);
+  const [currentStrategy, setCurrentStrategy] = useState(DEFAULT_STRATEGY);
   const [currentSymbol, setCurrentSymbol] = useState(DEFAULT_SYMBOL);
-  const [currentKlinesInterval, setCurrentKlinesInterval] =
+  const [currentKlinesInterval, setCurrentInterval] =
     useState(DEFAULT_INTERVAL);
-  const [open, setOpen] = useState(false);
-
-  const onChangeStrategy = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setStrategy(parseInt(event.target.value));
-  };
-
-  const { isLoading, binanceData } = useBinanceData(
+  const { isLoading, data } = useBinanceData(
+    currentStrategy,
     currentSymbol,
     currentKlinesInterval
   );
+  const orders = data?.filter((x) => x.order).map((x) => x.order!);
 
-  const getCurrentOrders = () => {
-    if (binanceData) {
-      const getOrdersFromData = (strategyData: WithOrderData[]) => {
-        const orders = strategyData.filter((x) => x.order).map((x) => x.order!);
-        return orders;
-      };
+  const handleChangeStrategy = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newStrategy = event.target.value;
 
-      switch (strategy) {
-        case EMA_STRATEGY:
-          return getOrdersFromData(binanceData.candles);
-        case MACD_STRATEGY:
-          return getOrdersFromData(binanceData.macd);
-        case COMBINED_STRATEGY:
-          return getOrdersFromData(binanceData.combined);
-        default:
-          return [];
-      }
-    }
-    return [];
+    setCurrentStrategy(newStrategy);
   };
 
   const handleChangeSymbol = (event: SelectChangeEvent) => {
-    setCurrentSymbol(event.target.value as string);
+    const newSymbol = event.target.value;
+
+    setCurrentSymbol(newSymbol);
   };
 
   const handleChangeInterval = (event: SelectChangeEvent<number>) => {
-    setCurrentKlinesInterval(event.target.value as number);
+    const newInterval = event.target.value as number;
+
+    setCurrentInterval(newInterval);
   };
 
   return (
     <>
-      {binanceData && (
+      {data && (
         <div style={{ paddingTop: "20px" }}>
           <Container maxWidth={false}>
             <Grid container spacing={2}>
@@ -177,40 +152,33 @@ export const CryptoDashboard = () => {
                     <RadioGroup
                       aria-label="strategy"
                       name="strategys"
-                      value={strategy}
-                      onChange={onChangeStrategy}
+                      value={currentStrategy}
+                      onChange={handleChangeStrategy}
                     >
-                      <FormControlLabel
-                        value={EMA_STRATEGY}
-                        control={<Radio />}
-                        label="Exponential Medium Average"
-                      />
-                      <FormControlLabel
-                        value={MACD_STRATEGY}
-                        control={<Radio />}
-                        label="MACD"
-                      />
-                      <FormControlLabel
-                        value={COMBINED_STRATEGY}
-                        control={<Radio />}
-                        label="MACD with EMAs guard"
-                      />
+                      {strategyList.map((strategyKey) => (
+                        <FormControlLabel
+                          key={strategyKey}
+                          value={strategyKey}
+                          control={<Radio />}
+                          label={strategyLabelDictionary[strategyKey]}
+                        />
+                      ))}
                     </RadioGroup>
                   </FormControl>
                 </Paper>
                 <br></br>
-                <OrdersAccordion orders={getCurrentOrders()} />
+                {orders && <OrdersAccordion orders={orders} />}
               </Grid>
               <Grid item xs={12} md={9}>
                 <Paper>
-                  {strategy === EMA_STRATEGY && (
-                    <Chart candleData={binanceData.candles} />
+                  {currentStrategy === EMA_STRATEGY_KEY && (
+                    <EmaChart candleData={data as EmaData[]} />
                   )}
-                  {strategy === MACD_STRATEGY && (
-                    <Macd data={binanceData.macd} />
+                  {currentStrategy === MACD_STRATEGY_KEY && (
+                    <MacdChart data={data as MacData[]} />
                   )}
-                  {strategy === COMBINED_STRATEGY && (
-                    <Macd data={binanceData.combined} />
+                  {currentStrategy === COMBINED_STRATEGY_KEY && (
+                    <MacdChart data={data as MacData[]} />
                   )}
                 </Paper>
               </Grid>
