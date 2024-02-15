@@ -1,29 +1,31 @@
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useAppDispatch } from '../../store/store';
-import { fetchKlines } from '../store/binance.actions';
-import { getKlines } from '../store/binance.selectors';
+import { useEffect, useState } from "react";
+import { getBinanceData } from "../services/binance-service";
+import { AllData } from "../types/types";
 
 export const useBinanceData = (symbol: string, klinesInterval: number) => {
   const [isLoading, setIsLoading] = useState<Boolean>(false);
+  const [data, setData] = useState<AllData>();
   const [error, setError] = useState<unknown>();
 
-  const binanceData = useSelector(getKlines);
-  const dispatch = useAppDispatch();
-
   useEffect(() => {
-    try {
-      setIsLoading(true);
-      dispatch(fetchKlines({ symbol, klinesInterval }));
-    } catch (err) {
-      setError(err);
-      setIsLoading(false);
-    }
-  }, [symbol, klinesInterval, dispatch]);
+    const getData = async () => {
+      try {
+        setIsLoading(true);
+        const binanceData = await getBinanceData(symbol, klinesInterval);
+        setData(binanceData);
+        setIsLoading(false);
+      } catch (err) {
+        setError(err);
+        setIsLoading(false);
+      }
+    };
+
+    getData();
+  }, [symbol, klinesInterval]);
 
   return {
     isLoading,
-    binanceData,
+    binanceData: data,
     error,
   };
 };
