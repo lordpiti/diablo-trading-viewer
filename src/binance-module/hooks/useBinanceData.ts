@@ -3,7 +3,7 @@ import { getBinanceData } from "../services/binance-service";
 import { AllData } from "../types/types";
 
 export const useBinanceData = (symbol: string, klinesInterval: number) => {
-  const [isLoading, setIsLoading] = useState<Boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [data, setData] = useState<AllData>();
   const [error, setError] = useState<unknown>();
 
