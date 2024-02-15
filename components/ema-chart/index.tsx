@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Bar,
   XAxis,
@@ -99,8 +101,8 @@ const EmaChart = ({ candleData }: Props) => {
                 <Cell key={`cell-${index}`} fill={colors[index % 20]} />
               ))}
             </Bar>
-            <Tooltip content={<CustomisedPopover />} />
-            <Legend />
+            {/* <Tooltip content={<CustomisedPopover />} /> */}
+            {/* <Legend /> */}
             <Line
               name="Exponential Moving Average 55"
               type="monotone"

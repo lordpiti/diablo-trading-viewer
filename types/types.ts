@@ -1,3 +1,9 @@
+import {
+  formatCombinedData,
+  formatEMAData,
+  formatMACDData,
+} from "@/utils/formatters";
+
 export interface ResponseTradingOrders {
   tradingData: TradingData;
   strategyResults: MacdStrategyResult | EmaStrategyResult;
@@ -79,3 +85,8 @@ export interface AllData {
   macd: MacData[];
   combined: MacData[];
 }
+
+export type BinanceFormatter =
+  | typeof formatEMAData
+  | typeof formatMACDData
+  | typeof formatCombinedData;

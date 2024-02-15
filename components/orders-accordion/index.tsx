@@ -1,3 +1,5 @@
+"use client";
+
 import React, { ChangeEvent, useState } from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";

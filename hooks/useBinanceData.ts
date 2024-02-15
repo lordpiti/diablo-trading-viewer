@@ -2,17 +2,17 @@ import { useEffect, useState } from "react";
 import * as binanceService from "@/services/binance-service";
 import { formatDate } from "@/utils/formatters";
 import {
-  EMA_STRATEGY,
-  MACD_STRATEGY,
-  COMBINED_STRATEGY,
-} from "../components/crypto-dashboard";
-import {
   EmaStrategyResult,
   EmaData,
   MacdStrategyResult,
   MacData,
   AllData,
 } from "../types/types";
+import {
+  COMBINED_STRATEGY_VALUE,
+  EMA_STRATEGY_VALUE,
+  MACD_STRATEGY_VALUE,
+} from "@/constants/constants";
 
 export const useBinanceData = (symbol: string, klinesInterval: number) => {
   const [binanceData, setBinanceData] = useState<AllData>();
@@ -27,17 +27,17 @@ export const useBinanceData = (symbol: string, klinesInterval: number) => {
         const responseEma = await binanceService.getKlines(
           symbol,
           klinesInterval,
-          EMA_STRATEGY
+          EMA_STRATEGY_VALUE
         );
         const responseMacd = await binanceService.getKlines(
           symbol,
           klinesInterval,
-          MACD_STRATEGY
+          MACD_STRATEGY_VALUE
         );
         const responseCombined = await binanceService.getKlines(
           symbol,
           klinesInterval,
-          COMBINED_STRATEGY
+          COMBINED_STRATEGY_VALUE
         );
 
         const emaStrategyResult = responseEma.data

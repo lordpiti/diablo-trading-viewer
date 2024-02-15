@@ -6,7 +6,7 @@ export const getKlines = async (
   klinesInterval: number,
   strategy: number
 ) => {
-  return await axiosInstance.get<ResponseTradingOrders>(
+  return axiosInstance.get<ResponseTradingOrders>(
     `${process.env.NEXT_PUBLIC_TRADING_API_URL}/api/trading/klines/${symbol}/interval/${klinesInterval}/strategy/${strategy}?includeOrders=true`
   );
 };

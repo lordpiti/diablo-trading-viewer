@@ -1,7 +1,8 @@
 .root {
   text-align: center;
   background-color: lightgrey;
-  height: calc(100vh - 7vh);
+  min-height: calc(100vh - 7vh);
+  height: 100%;
 }
 
 .header {
