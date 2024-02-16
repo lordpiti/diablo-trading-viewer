@@ -1,45 +1,45 @@
-import CustomizedDot from '../customisedDot';
-import CustomisedPopover from '../customisedPopover';
+import { Box } from "@mui/material";
 import {
-  XAxis,
-  YAxis,
-  Line,
   CartesianGrid,
+  Legend,
+  Line,
   LineChart,
   ResponsiveContainer,
   Tooltip,
-  Legend,
-} from 'recharts';
-import { MacData } from '../../types/types';
-import { Box } from '@mui/material';
+  XAxis,
+  YAxis,
+} from "recharts";
 
+import CustomizedDot from "@/components/customisedDot";
+import CustomisedPopover from "@/components/customisedPopover";
+import { MacData } from "@/types/types";
 
 const styles = {
   chartTitle: {
-    fontSize: '24px',
-    fontWeight: 'bold',
+    fontSize: "24px",
+    fontWeight: "bold",
   },
 };
 
 const MacdChart = (props: { data: MacData[] }) => {
   const { data } = props;
 
-  const minValueMacd = Math.min(...data.map(x => x.macd));
-  const maxValueMacd = Math.max(...data.map(x => x.macd));
+  const minValueMacd = Math.min(...data.map((x) => x.macd));
+  const maxValueMacd = Math.max(...data.map((x) => x.macd));
 
-  const minValueSignal = Math.min(...data.map(x => x.signal));
-  const maxValueSignal = Math.max(...data.map(x => x.signal));
+  const minValueSignal = Math.min(...data.map((x) => x.signal));
+  const maxValueSignal = Math.max(...data.map((x) => x.signal));
 
   return (
     <>
       <Box
         sx={styles.chartTitle}
-      // style={{ writingMode: 'vertical-lr', transform: 'rotate(180deg)' }}
+        // style={{ writingMode: 'vertical-lr', transform: 'rotate(180deg)' }}
       >
         MacD Indicator
       </Box>
-      <div style={{ height: '500px', paddingRight: '20px' }}>
-        <ResponsiveContainer width='100%' height='100%'>
+      <div style={{ height: "500px", paddingRight: "20px" }}>
+        <ResponsiveContainer width="100%" height="100%">
           <LineChart
             width={500}
             height={300}
@@ -51,8 +51,8 @@ const MacdChart = (props: { data: MacData[] }) => {
               bottom: 5,
             }}
           >
-            <CartesianGrid strokeDasharray='3 3' />
-            <XAxis dataKey='date' />
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
             <YAxis
               domain={[
                 Math.floor(Math.min(minValueMacd, minValueSignal)),
@@ -62,18 +62,18 @@ const MacdChart = (props: { data: MacData[] }) => {
             <Tooltip content={<CustomisedPopover />} />
             <Legend />
             <Line
-              name='MACD'
-              type='monotone'
-              dataKey='macd'
-              stroke='#8884d8'
+              name="MACD"
+              type="monotone"
+              dataKey="macd"
+              stroke="#8884d8"
               activeDot={{ r: 8 }}
               dot={false}
             />
             <Line
-              name='Signal'
-              type='monotone'
-              dataKey='signal'
-              stroke='#e28743'
+              name="Signal"
+              type="monotone"
+              dataKey="signal"
+              stroke="#e28743"
               activeDot={{ r: 8 }}
               dot={<CustomizedDot />}
             />
