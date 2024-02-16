@@ -9,6 +9,7 @@ import {
   ComposedChart,
   Tooltip,
   Legend,
+  BarProps,
 } from "recharts";
 import { Box } from "@mui/material";
 
@@ -16,6 +17,7 @@ import CandleStick from "@/components/candle-stick";
 import CustomizedDot from "@/components/customisedDot";
 import CustomisedPopover from "@/components/customisedPopover";
 import { EmaData } from "@/types/types";
+import { ActiveShape } from "recharts/types/util/types";
 
 const styles = {
   chartTitle: {
@@ -80,10 +82,8 @@ const EmaChart = ({ candleData }: Props) => {
       <div style={{ height: "500px", paddingRight: "20px" }}>
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart
-            // width={600}
             height={300}
             data={data}
-            // barCategoryGap={0}
             margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
           >
             <XAxis dataKey="date" />
@@ -93,8 +93,7 @@ const EmaChart = ({ candleData }: Props) => {
               name="Klines"
               dataKey="openClose"
               fill="#8884d8"
-              shape={CandleStick}
-              // label={{ position: 'top' }}
+              shape={CandleStick as ActiveShape<BarProps, SVGPathElement>}
             >
               {data.map((_, index: number) => (
                 <Cell key={`cell-${index}`} fill={colors[index % 20]} />
