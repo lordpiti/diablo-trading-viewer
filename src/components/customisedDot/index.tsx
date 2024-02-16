@@ -1,5 +1,6 @@
-import { DotProps } from 'recharts';
-import { WithOrderData } from '../../types/types';
+import { DotProps } from "recharts";
+
+import { WithOrderData } from "@/types/types";
 
 interface Props extends DotProps {
   payload?: WithOrderData;
@@ -11,10 +12,10 @@ const CustomizedDot = (props: Props) => {
     return (
       <svg x={cx - 15} y={cy - 15} width={30} height={30}>
         <circle
-          cx='15'
-          cy='15'
-          r='7.5'
-          fill={payload.order.isBuy ? 'red' : 'green'}
+          cx="15"
+          cy="15"
+          r="7.5"
+          fill={payload.order.isBuy ? "red" : "green"}
         />
       </svg>
     );

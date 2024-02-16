@@ -1,10 +1,11 @@
-import React, { ChangeEvent, useState } from "react";
+import { Box, Chip, Grid } from "@mui/material";
 import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
-import { Box, Chip, Grid, Paper } from "@mui/material";
-import { formatDate } from "../../utils/formatters";
-import { Order } from "../../types/types";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import { ChangeEvent, useState } from "react";
+
+import { Order } from "@/types/types";
+import { formatDate } from "@/utils/formatters";
 
 const styles = {
   root: {
@@ -57,7 +58,7 @@ const OrdersAccordion = (props: { orders: Order[] }) => {
     };
 
   return (
-    <Paper>
+    <>
       <Box sx={styles.heading}>Orders</Box>
       {(!orders || !orders.length) && (
         <Box sx={styles.noOrders}>No orders sent</Box>
@@ -92,7 +93,7 @@ const OrdersAccordion = (props: { orders: Order[] }) => {
             </AccordionDetails>
           </Accordion>
         ))}
-    </Paper>
+    </>
   );
 };
 

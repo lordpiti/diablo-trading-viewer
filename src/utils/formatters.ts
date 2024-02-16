@@ -1,3 +1,5 @@
+import moment from "moment";
+
 import {
   COMBINED_STRATEGY_KEY,
   EMA_STRATEGY_KEY,
@@ -12,7 +14,6 @@ import {
   MacdStrategyResult,
   ResponseTradingOrders,
 } from "@/types/types";
-import moment from "moment";
 
 export const formatDate = (date: string) =>
   moment(new Date(date)).format("D/M/yyyy hh:mm");

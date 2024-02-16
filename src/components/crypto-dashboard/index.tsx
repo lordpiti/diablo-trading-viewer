@@ -1,16 +1,4 @@
 import {
-  COMBINED_STRATEGY_KEY,
-  DEFAULT_INTERVAL,
-  DEFAULT_STRATEGY,
-  DEFAULT_SYMBOL,
-  EMA_STRATEGY_KEY,
-  MACD_STRATEGY_KEY,
-  intervals,
-  strategyLabelDictionary,
-  strategyList,
-  symbols,
-} from "@/constants/constants";
-import {
   Backdrop,
   Box,
   CircularProgress,
@@ -28,11 +16,24 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import React, { useState } from "react";
-import { useBinanceData } from "../../hooks/useBinanceData";
-import { EmaData, MacData } from "../../types/types";
-import EmaChart from "../ema-chart";
-import MacdChart from "../macd-chart";
-import OrdersAccordion from "../orders-accordion";
+
+import {
+  COMBINED_STRATEGY_KEY,
+  DEFAULT_INTERVAL,
+  DEFAULT_STRATEGY,
+  DEFAULT_SYMBOL,
+  EMA_STRATEGY_KEY,
+  MACD_STRATEGY_KEY,
+  intervals,
+  strategyLabelDictionary,
+  strategyList,
+  symbols,
+} from "@/constants/constants";
+import { useBinanceData } from "@/hooks/useBinanceData";
+import { EmaData, MacData } from "@/types/types";
+import EmaChart from "@/components/ema-chart";
+import MacdChart from "@/components/macd-chart";
+import OrdersAccordion from "@/components/orders-accordion";
 
 const styles = {
   heading: {
@@ -47,33 +48,28 @@ const styles = {
 };
 
 export const CryptoDashboard = () => {
-  const [currentStrategy, setCurrentStrategy] = useState(DEFAULT_STRATEGY);
-  const [currentSymbol, setCurrentSymbol] = useState(DEFAULT_SYMBOL);
-  const [currentKlinesInterval, setCurrentInterval] =
-    useState(DEFAULT_INTERVAL);
-  const { isLoading, data } = useBinanceData(
-    currentStrategy,
-    currentSymbol,
-    currentKlinesInterval
-  );
+  const [strategy, setStrategy] = useState(DEFAULT_STRATEGY);
+  const [symbol, setSymbol] = useState(DEFAULT_SYMBOL);
+  const [interval, setInterval] = useState(DEFAULT_INTERVAL);
+  const { isLoading, data } = useBinanceData(strategy, symbol, interval);
   const orders = data?.filter((x) => x.order).map((x) => x.order!);
 
   const handleChangeStrategy = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newStrategy = event.target.value;
 
-    setCurrentStrategy(newStrategy);
+    setStrategy(newStrategy);
   };
 
   const handleChangeSymbol = (event: SelectChangeEvent) => {
     const newSymbol = event.target.value;
 
-    setCurrentSymbol(newSymbol);
+    setSymbol(newSymbol);
   };
 
   const handleChangeInterval = (event: SelectChangeEvent<number>) => {
     const newInterval = event.target.value as number;
 
-    setCurrentInterval(newInterval);
+    setInterval(newInterval);
   };
 
   return (
@@ -97,7 +93,7 @@ export const CryptoDashboard = () => {
                           Select symbol
                         </InputLabel>
                         <Select
-                          value={currentSymbol}
+                          value={symbol}
                           onChange={handleChangeSymbol}
                           label="Select symbol"
                           labelId="symbol-select-label"
@@ -123,7 +119,7 @@ export const CryptoDashboard = () => {
                           Select interval
                         </InputLabel>
                         <Select
-                          value={currentKlinesInterval}
+                          value={interval}
                           label="Select interval"
                           onChange={handleChangeInterval}
                           labelId="interval-select-label"
@@ -152,7 +148,7 @@ export const CryptoDashboard = () => {
                     <RadioGroup
                       aria-label="strategy"
                       name="strategys"
-                      value={currentStrategy}
+                      value={strategy}
                       onChange={handleChangeStrategy}
                     >
                       {strategyList.map((strategyKey) => (
@@ -167,17 +163,17 @@ export const CryptoDashboard = () => {
                   </FormControl>
                 </Paper>
                 <br></br>
-                {orders && <OrdersAccordion orders={orders} />}
+                <Paper>{orders && <OrdersAccordion orders={orders} />}</Paper>
               </Grid>
               <Grid item xs={12} md={9}>
                 <Paper>
-                  {currentStrategy === EMA_STRATEGY_KEY && (
+                  {strategy === EMA_STRATEGY_KEY && (
                     <EmaChart candleData={data as EmaData[]} />
                   )}
-                  {currentStrategy === MACD_STRATEGY_KEY && (
+                  {strategy === MACD_STRATEGY_KEY && (
                     <MacdChart data={data as MacData[]} />
                   )}
-                  {currentStrategy === COMBINED_STRATEGY_KEY && (
+                  {strategy === COMBINED_STRATEGY_KEY && (
                     <MacdChart data={data as MacData[]} />
                   )}
                 </Paper>

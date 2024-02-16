@@ -1,6 +1,3 @@
-import CustomizedDot from "@/components/customisedDot";
-import CustomisedPopover from "@/components/customisedPopover";
-import { MacData } from "@/types/types";
 import { Box } from "@mui/material";
 import {
   CartesianGrid,
@@ -12,6 +9,10 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+
+import CustomizedDot from "@/components/customisedDot";
+import CustomisedPopover from "@/components/customisedPopover";
+import { MacData } from "@/types/types";
 
 const styles = {
   chartTitle: {

@@ -1,14 +1,17 @@
-import "./App.css";
-import { CryptoDashboard } from "./components/crypto-dashboard";
-import { Route, Routes } from "react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+import { CryptoDashboard } from "@/components/crypto-dashboard";
+import "@/App.css";
+
+const queryClient = new QueryClient();
 
 const App = () => {
   return (
     <div className="App">
       <header className="App-header">Diablo Trading App</header>
-      <Routes>
-        <Route path="/" element={<CryptoDashboard />} />
-      </Routes>
+      <QueryClientProvider client={queryClient}>
+        <CryptoDashboard />
+      </QueryClientProvider>
     </div>
   );
 };
