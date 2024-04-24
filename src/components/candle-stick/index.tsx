@@ -20,11 +20,11 @@ const Candlestick = (props: Props) => {
     openClose: [open, close],
   } = props;
   const isGrowing = open < close;
-  const color = isGrowing ? 'green' : 'red';
+  const color = isGrowing ? "green" : "red";
   const ratio = Math.abs(height / (open - close));
 
   return (
-    <g stroke={color} fill='none' strokeWidth='2'>
+    <g stroke={color} fill="none" strokeWidth="2">
       <path
         d={`
           M ${x},${y}
